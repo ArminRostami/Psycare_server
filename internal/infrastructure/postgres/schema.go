@@ -18,13 +18,12 @@ var DefaultSchema = schema{
 	);
 	
 	CREATE TABLE advisors (
-		id serial PRIMARY KEY,
-		user_name varchar (60) NOT NULL,
-		email text UNIQUE NOT NULL,
-		password varchar (60) NOT NULL,
-		credit numeric (8,3) NOT NULL DEFAULT 0,
+		id integer REFERENCES users(id) ON DELETE CASCADE,
+		first_name varchar (30) NOT NULL,
+		last_name varchar (45) NOT NULL,
 		description text,
-		verified boolean NOT NULL DEFAULT FALSE
+		verified boolean NOT NULL DEFAULT FALSE,
+		PRIMARY KEY (id)
 	);
 	
 	CREATE TABLE roles (

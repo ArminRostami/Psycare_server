@@ -11,8 +11,8 @@ import (
 func TestAuth(t *testing.T) {
 	assert := assert.New(t)
 	ur := &mocks.UserRepoMock{}
-	service := userService{repo: ur}
-	err := service.addUser(&app.User{UserName: "armin", Email: "rostamiarmin@gmail.com", Password: "asdfasdf"})
+	service := UserService{Repo: ur}
+	err := service.AddUser(&app.User{UserName: "armin", Email: "rostamiarmin@gmail.com", Password: "asdfasdf"})
 	assert.NoError(err)
 	u, err := service.authUser("armin", "asdfasdf")
 	assert.NoError(err)

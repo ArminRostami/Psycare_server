@@ -5,27 +5,20 @@ import (
 
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestSchema(t *testing.T) {
-	connStr := "postgres://postgres:example@localhost/postgres?sslmode=disable"
+func TestCreateSchema(t *testing.T) {
+	assert := assert.New(t)
 	db, err := sqlx.Connect(pgDriver, connStr)
-	if err != nil {
-		t.Error("\nDB connection failed:\n", err.Error())
-	}
+	assert.NoError(err)
 	_, err = db.Exec(DefaultSchema.create)
-	if err != nil {
-		t.Error("\nDB schema error:\n", err.Error())
-	}
+	assert.NoError(err)
 }
-func TestSchemaDrop(t *testing.T) {
-	connStr := "postgres://postgres:example@localhost/postgres?sslmode=disable"
+func TestDropSchema(t *testing.T) {
+	assert := assert.New(t)
 	db, err := sqlx.Connect(pgDriver, connStr)
-	if err != nil {
-		t.Error("\nDB connection failed:\n", err.Error())
-	}
+	assert.NoError(err)
 	_, err = db.Exec(DefaultSchema.drop)
-	if err != nil {
-		t.Error("\nDB drop error:\n", err.Error())
-	}
+	assert.NoError(err)
 }

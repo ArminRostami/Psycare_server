@@ -16,9 +16,5 @@ func getDB(connStr string) (*sqlx.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("db connection error: %w", err)
 	}
-	_, err = db.Exec(DefaultSchema.create)
-	if err != nil {
-		return nil, fmt.Errorf("schema failed to create: %w", err)
-	}
 	return db, nil
 }
