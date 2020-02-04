@@ -18,14 +18,14 @@ import (
 
 func TestUsers(t *testing.T) {
 	assert := assert.New(t)
-	us := &app.UserService{Store: &mocks.UserRepoMock{}}
+	us := &app.UserService{Store: &mocks.UserStoreMock{}}
 	v := validator.New()
-	h := &Handler{Validate: v, Us: us}
+	h := &Handler{Validate: v, UserService: us}
 	w := httptest.NewRecorder()
 	u, err := json.Marshal(domain.User{UserName: "armin", Password: "asdfasdf", Email: "rostamiarmin@gmail.com"})
 	assert.NoError(err)
 	r := httptest.NewRequest("POST", "http://example.com", bytes.NewReader(u))
-	h.addUser(w, r)
+	h.createUser(w, r)
 	resp := w.Result()
 	body, err := ioutil.ReadAll(resp.Body)
 	assert.NoError(err)

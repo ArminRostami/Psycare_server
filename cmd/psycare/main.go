@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+
 	"psycare/internal/adapters/http"
 	"psycare/internal/adapters/postgres"
 	app "psycare/internal/application"
+
+	"github.com/go-chi/jwtauth"
 	"github.com/go-playground/validator"
 )
 
@@ -25,7 +28,9 @@ func bootstrap() error {
 	store := &postgres.UserStore{DB: db}
 	us := &app.UserService{Store: store}
 	v := validator.New()
-	handler := http.Handler{Us: us,Validate: v}
+	secret := []byte("VhFJdNDsE9vheq6wTEFga7WhuR4TJ1E8JTPNFaH3e_o")
+	auth := jwtauth.New("HS256", secret, nil)
+	handler := http.Handler{UserService: us, Validate: v, Auth: auth}
 	handler.Serve()
 	return nil
 }

@@ -40,7 +40,8 @@ func (s *UserService) AddUser(u *domain.User) error {
 	return nil
 }
 
-func (s *UserService) authUser(username, password string) (*domain.User, error) {
+// AuthUser _
+func (s *UserService) AuthUser(username, password string) (*domain.User, error) {
 	u, err := s.Store.GetUserWithName(username)
 	if err != nil {
 		return nil, err
