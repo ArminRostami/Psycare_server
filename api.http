@@ -1,0 +1,11 @@
+@root = 127.0.0.1:5555
+
+POST http://{{root}}/api/v1/users
+
+{
+    "user_name":"armin2",
+    "email":"abcd@gmail.com",
+    "password":"omegalul"
+}
+
+

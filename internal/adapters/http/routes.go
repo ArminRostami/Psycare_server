@@ -9,32 +9,34 @@ import (
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator"
 
-	server "psycare/internal/application"
+	app "psycare/internal/application"
 )
 
-type handler struct {
-	router   *chi.Mux
-	us       *server.UserService
-	validate *validator.Validate
+// Handler is an http handler impl using go-chi
+type Handler struct {
+	Router   *chi.Mux
+	Us       *app.UserService
+	Validate *validator.Validate
 }
 
-func (h *handler) setupRoutes() {
-	h.router = chi.NewRouter()
-	h.router.Use(middleware.Logger)
-	h.router.Use(middleware.Recoverer)
-	h.router.Use(render.SetContentType(render.ContentTypeJSON))
+func (h *Handler) SetupRoutes() {
+	h.Router = chi.NewRouter()
+	h.Router.Use(middleware.Logger)
+	h.Router.Use(middleware.Recoverer)
+	h.Router.Use(render.SetContentType(render.ContentTypeJSON))
 
 	usersRouter := chi.NewRouter()
 	usersRouter.Post("/", h.addUser)
 
-	h.router.Route("/api/v1", func(r chi.Router) {
+	h.Router.Route("/api/v1", func(r chi.Router) {
 		r.Mount("/users", usersRouter)
 	})
 }
 
-func (h *handler) serve() {
-	h.setupRoutes()
-	log.Fatal(http.ListenAndServe(":5555", h.router))
+func (h *Handler) Serve() {
+	h.SetupRoutes()
+	log.Print("listening on port 5555...")
+	log.Fatal(http.ListenAndServe(":5555", h.Router))
 }
 
 func renderData(w http.ResponseWriter, r *http.Request, data interface{}) {

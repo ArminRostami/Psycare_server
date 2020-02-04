@@ -11,7 +11,7 @@ import (
 const pgDriver = "pgx"
 const connStr = "postgres://postgres:example@localhost/postgres?sslmode=disable"
 
-func getDB(connStr string) (*sqlx.DB, error) {
+func GetDB(connStr string) (*sqlx.DB, error) {
 	db, err := sqlx.Connect(pgDriver, connStr)
 	if err != nil {
 		return nil, fmt.Errorf("db connection error: %w", err)

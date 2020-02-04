@@ -1,15 +1,21 @@
-package server
+package app
 
 import (
 	"fmt"
-	app "psycare/internal/domain"
+	"psycare/internal/domain"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
+// UserStore interface defines methods for processing user data
+type UserStore interface {
+	GetUserWithName(username string) (*domain.User, error)
+	AddUser(u *domain.User) error
+}
+
 // UserService extends UserRepo to add more functionality
 type UserService struct {
-	Repo app.UserRepo
+	Store UserStore
 }
 
 func hashPassword(password string) (string, error) {
@@ -21,21 +27,21 @@ func hashPassword(password string) (string, error) {
 }
 
 // AddUser adds the user to repository
-func (s *UserService) AddUser(u *app.User) error {
+func (s *UserService) AddUser(u *domain.User) error {
 	hash, err := hashPassword(u.Password)
 	if err != nil {
 		return err
 	}
 	u.Password = hash
-	err = s.Repo.AddUser(u)
+	err = s.Store.AddUser(u)
 	if err != nil {
 		return fmt.Errorf("error adding user: %w", err)
 	}
 	return nil
 }
 
-func (s *UserService) authUser(username, password string) (*app.User, error) {
-	u, err := s.Repo.GetUserWithName(username)
+func (s *UserService) authUser(username, password string) (*domain.User, error) {
+	u, err := s.Store.GetUserWithName(username)
 	if err != nil {
 		return nil, err
 	}

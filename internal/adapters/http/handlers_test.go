@@ -6,8 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	server "psycare/internal/application"
-	app "psycare/internal/domain"
+
+	app "psycare/internal/application"
+	"psycare/internal/domain"
 	"psycare/mocks"
 	"testing"
 
@@ -17,11 +18,11 @@ import (
 
 func TestUsers(t *testing.T) {
 	assert := assert.New(t)
-	us := &server.UserService{Repo: &mocks.UserRepoMock{}}
+	us := &app.UserService{Store: &mocks.UserRepoMock{}}
 	v := validator.New()
-	h := &handler{validate: v, us: us}
+	h := &Handler{Validate: v, Us: us}
 	w := httptest.NewRecorder()
-	u, err := json.Marshal(app.User{UserName: "armin", Password: "asdfasdf", Email: "rostamiarmin@gmail.com"})
+	u, err := json.Marshal(domain.User{UserName: "armin", Password: "asdfasdf", Email: "rostamiarmin@gmail.com"})
 	assert.NoError(err)
 	r := httptest.NewRequest("POST", "http://example.com", bytes.NewReader(u))
 	h.addUser(w, r)

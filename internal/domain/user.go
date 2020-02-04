@@ -1,4 +1,4 @@
-package app
+package domain
 
 // User is the struct that holds user data
 type User struct {
@@ -7,10 +7,4 @@ type User struct {
 	Password string  `db:"password" json:"password" validate:"required"`
 	ID       int64   `db:"id"`
 	Credit   float64 `db:"credit"`
-}
-
-// UserRepo interface defines methods for processing user data
-type UserRepo interface {
-	GetUserWithName(username string) (*User, error)
-	AddUser(u *User) error
 }

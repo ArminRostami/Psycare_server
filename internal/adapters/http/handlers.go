@@ -6,19 +6,19 @@ import (
 	app "psycare/internal/domain"
 )
 
-func (h *handler) addUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) addUser(w http.ResponseWriter, r *http.Request) {
 	user := &app.User{}
 	err := json.NewDecoder(r.Body).Decode(user)
 	if err != nil {
 		renderError(w, r, http.StatusBadRequest, "request decoding error", err)
 		return
 	}
-	err = h.validate.Struct(user)
+	err = h.Validate.Struct(user)
 	if err != nil {
 		renderError(w, r, http.StatusBadRequest, "request validation error", err)
 		return
 	}
-	err = h.us.AddUser(user)
+	err = h.Us.AddUser(user)
 	if err != nil {
 		renderError(w, r, http.StatusInternalServerError, "user registration error", err)
 		return
