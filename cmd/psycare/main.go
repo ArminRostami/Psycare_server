@@ -22,14 +22,13 @@ func main() {
 }
 
 func bootstrap() error {
-	// const connStr = "postgres://postgres:example@localhost/postgres?sslmode=disable"
 	connStr := "user=postgres password=example host=localhost port=5432 database=postgres sslmode=disable"
-	db, err := postgres.GetDB(connStr)
+	pdb, err := postgres.Connect(connStr)
 	if err != nil {
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
-	userStore := &postgres.UserStore{DB: db}
-	advisorStore := &postgres.AdvisorStore{DB: db}
+	userStore := &postgres.UserStore{DB: pdb}
+	advisorStore := &postgres.AdvisorStore{DB: pdb}
 	us := &app.UserService{Store: userStore}
 	as := &app.AdvisorService{Store: advisorStore}
 	v := validator.New()
