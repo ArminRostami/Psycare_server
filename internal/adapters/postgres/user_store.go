@@ -33,8 +33,11 @@ func (us *UserStore) GetUserWithName(username string) (*app.User, error) {
 
 // AddUser _
 func (us *UserStore) AddUser(u *app.User) error {
-	tx := us.DB.MustBegin()
-	_, err := tx.NamedExec(`INSERT INTO users (username, email, password, credit) 
+	tx, err := us.DB.Beginx()
+	if err != nil {
+		return fmt.Errorf("transaction start failed: %w", err)
+	}
+	_, err = tx.NamedExec(`INSERT INTO users (username, email, password, credit) 
 				  VALUES (:username,:email,:password,:credit)`, u)
 	if err != nil {
 		return fmt.Errorf("inserting new user failed: %w", err)
@@ -47,8 +50,11 @@ func (us *UserStore) AddUser(u *app.User) error {
 }
 
 func (us *UserStore) changeDesc(id int64, desc string) error {
-	tx := us.DB.MustBegin()
-	_, err := tx.Exec(`INSERT INTO advisors (id, description) VALUES ($1, $2) 
+	tx, err := us.DB.Beginx()
+	if err != nil {
+		return fmt.Errorf("transaction start failed: %w", err)
+	}
+	_, err = tx.Exec(`INSERT INTO advisors (id, description) VALUES ($1, $2) 
 			 ON CONFLICT(id) DO UPDATE 
 			 SET description = $2`, id, desc)
 	if err != nil {

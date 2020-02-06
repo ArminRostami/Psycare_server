@@ -21,7 +21,7 @@ var DefaultSchema = schema{
 		id integer REFERENCES users(id) ON DELETE CASCADE,
 		first_name varchar (30) NOT NULL,
 		last_name varchar (45) NOT NULL,
-		description text,
+		description text NOT NULL,
 		verified boolean NOT NULL DEFAULT FALSE,
 		PRIMARY KEY (id)
 	);

@@ -11,9 +11,21 @@ POST {{api}}/users
 
 ###
 
+# @name auth
 POST {{api}}/users/auth
 
 {
     "username":"armin",
     "password":"omegalul"
+}
+
+###
+
+POST {{api}}/advisors/
+Cookie: {{auth.response.headers.Set-Cookie}} 
+
+{
+    "first_name":"mamood",
+    "last_name":"bozorge",
+    "description":"failing advisor"
 }

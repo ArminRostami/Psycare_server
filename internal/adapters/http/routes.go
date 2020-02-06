@@ -1,6 +1,7 @@
 package http
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -21,9 +22,10 @@ type httpError struct {
 
 // Handler is an http handler impl using go-chi
 type Handler struct {
-	Auth   *jwtauth.JWTAuth
-	Router *chi.Mux
+	*app.AdvisorService
 	*app.UserService
+	Auth     *jwtauth.JWTAuth
+	Router   *chi.Mux
 	Validate *validator.Validate
 }
 
@@ -34,12 +36,18 @@ func (h *Handler) SetupRoutes() {
 	h.Router.Use(middleware.Recoverer)
 	h.Router.Use(render.SetContentType(render.ContentTypeJSON))
 
-	usersRouter := chi.NewRouter()
-	usersRouter.Post("/", h.createUser)
-	usersRouter.Post("/auth", h.login)
-
 	h.Router.Route("/api/v1", func(r chi.Router) {
-		r.Mount("/users", usersRouter)
+
+		r.Route("/users", func(r chi.Router) {
+			r.Post("/", h.createUser)
+			r.Post("/auth", h.login)
+		})
+
+		r.Route("/advisors", func(r chi.Router) {
+			r.Use(jwtauth.Verifier(h.Auth))
+			r.Use(jwtauth.Authenticator)
+			r.Post("/", h.createAdvisor)
+		})
 	})
 }
 
@@ -48,6 +56,18 @@ func (h *Handler) Serve() {
 	h.SetupRoutes()
 	log.Print("listening on port 5555...")
 	log.Fatal(http.ListenAndServe(":5555", h.Router))
+}
+
+func (h *Handler) decodeAndValidate(r *http.Request, dst interface{}) *httpError {
+	err := json.NewDecoder(r.Body).Decode(dst)
+	if err != nil {
+		return &httpError{status: http.StatusBadRequest, errType: "request decoding error", err: err}
+	}
+	err = h.Validate.Struct(dst)
+	if err != nil {
+		return &httpError{status: http.StatusBadRequest, errType: "request validation error", err: err}
+	}
+	return nil
 }
 
 func renderData(w http.ResponseWriter, r *http.Request, data interface{}) {

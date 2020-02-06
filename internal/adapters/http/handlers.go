@@ -1,11 +1,13 @@
 package http
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
+	"psycare/internal/domain"
 	app "psycare/internal/domain"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-chi/jwtauth"
 )
 
 func (h *Handler) createUser(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +23,6 @@ func (h *Handler) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	renderData(w, r, "user registered")
-	return
 }
 
 func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
@@ -51,14 +52,42 @@ func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "jwt", Value: tokenString})
 }
 
-func (h *Handler) decodeAndValidate(r *http.Request, dst interface{}) *httpError {
-	err := json.NewDecoder(r.Body).Decode(dst)
+func (h *Handler) createAdvisor(w http.ResponseWriter, r *http.Request) {
+	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		return &httpError{status: http.StatusBadRequest, errType: "request decoding error", err: err}
+		renderError(w, r, &httpError{"could not get claims", http.StatusInternalServerError, err})
+		return
 	}
-	err = h.Validate.Struct(dst)
+	id, err := getID(claims)
 	if err != nil {
-		return &httpError{status: http.StatusBadRequest, errType: "request validation error", err: err}
+		renderError(w, r, &httpError{"could not get id from claims", http.StatusInternalServerError, err})
+		return
 	}
-	return nil
+	a := &domain.Advisor{}
+
+	httpErr := h.decodeAndValidate(r, a)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+	a.ID = int64(id)
+	err = h.CreateAdvisor(a)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to create advisor", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, "advisor registered")
+}
+
+func getID(claims jwt.MapClaims) (int64, error) {
+	id, exists := claims["id"]
+	if !exists {
+		return -1, fmt.Errorf("claims does not include id")
+	}
+	idi, ok := id.(float64)
+	fmt.Println(idi)
+	if !ok {
+		return -1, fmt.Errorf("could not cast id to int64")
+	}
+	return int64(idi), nil
 }
