@@ -37,17 +37,19 @@ func (h *Handler) SetupRoutes() {
 	h.Router.Use(render.SetContentType(render.ContentTypeJSON))
 
 	h.Router.Route("/api/v1", func(r chi.Router) {
+		r.Group(func(r chi.Router) {
+			r.Post("/users", h.createUser)
+			r.Post("/users/auth", h.login)
+			r.Get("/advisors", h.getAdvisors)
 
-		r.Route("/users", func(r chi.Router) {
-			r.Post("/", h.createUser)
-			r.Post("/auth", h.login)
 		})
 
-		r.Route("/advisors", func(r chi.Router) {
+		r.Group(func(r chi.Router) {
 			r.Use(jwtauth.Verifier(h.Auth))
 			r.Use(jwtauth.Authenticator)
-			r.Post("/", h.createAdvisor)
+			r.Post("/advisors", h.createAdvisor)
 		})
+
 	})
 }
 

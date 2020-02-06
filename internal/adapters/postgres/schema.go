@@ -22,7 +22,7 @@ var DefaultSchema = schema{
 		first_name varchar (30) NOT NULL,
 		last_name varchar (45) NOT NULL,
 		description text NOT NULL,
-		verified boolean NOT NULL DEFAULT FALSE,
+		verified boolean NOT NULL DEFAULT TRUE,
 		PRIMARY KEY (id)
 	);
 	

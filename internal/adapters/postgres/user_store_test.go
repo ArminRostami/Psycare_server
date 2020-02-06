@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	app "psycare/internal/domain"
+	"psycare/internal/domain"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,7 +12,7 @@ func TestAddUser(t *testing.T) {
 	db, err := GetDB(connStr)
 	assert.NoError(err)
 	repo := &UserStore{DB: db}
-	err = repo.AddUser(&app.User{UserName: "armin", Email: "rostamiarmin@gmail.com", Password: "asdf"})
+	err = repo.AddUser(&domain.User{UserName: "armin", Email: "rostamiarmin@gmail.com", Password: "asdf"})
 	assert.NoError(err)
 }
 func TestAddDesc(t *testing.T) {

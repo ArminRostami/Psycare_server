@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"psycare/internal/domain"
 	app "psycare/internal/domain"
+	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/jwtauth"
@@ -90,4 +91,36 @@ func getID(claims jwt.MapClaims) (int64, error) {
 		return -1, fmt.Errorf("could not cast id to int64")
 	}
 	return int64(idi), nil
+}
+
+func (h *Handler) getAdvisors(w http.ResponseWriter, r *http.Request) {
+
+	var limit, offset int
+	limitStr := r.URL.Query().Get("limit")
+	offsetStr := r.URL.Query().Get("offset")
+	if limitStr != "" {
+		lim, err := strconv.ParseInt(limitStr, 10, 64)
+		if err != nil {
+			renderError(w, r, &httpError{"param parse error", http.StatusBadRequest, err})
+			return
+		}
+		limit = int(lim)
+	} else {
+		limit = 20
+	}
+	if offsetStr != "" {
+		off, err := strconv.ParseInt(offsetStr, 10, 64)
+		if err != nil {
+			renderError(w, r, &httpError{"param parse error", http.StatusBadRequest, err})
+			return
+		}
+		offset = int(off)
+	}
+
+	advisors, err := h.GetAdvisors(true, limit, offset)
+	if err != nil {
+		renderError(w, r, &httpError{"resource fetching error", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, advisors)
 }

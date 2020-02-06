@@ -2,12 +2,12 @@ package postgres
 
 import (
 	"fmt"
-	app "psycare/internal/domain"
+	"psycare/internal/domain"
 
 	"github.com/jmoiron/sqlx"
 )
 
-// UserStore implements the app.UserStore interface using postgresql
+// UserStore implements the UserStore interface using postgresql
 type UserStore struct {
 	DB *sqlx.DB
 }
@@ -22,8 +22,8 @@ func (us *UserStore) connect(connStr string) error {
 }
 
 // GetUserWithName _
-func (us *UserStore) GetUserWithName(username string) (*app.User, error) {
-	u := &app.User{}
+func (us *UserStore) GetUserWithName(username string) (*domain.User, error) {
+	u := &domain.User{}
 	err := us.DB.Get(u, "SELECT * FROM users WHERE (username=$1)", username)
 	if err != nil {
 		return nil, fmt.Errorf("no such user: %w", err)
@@ -32,7 +32,7 @@ func (us *UserStore) GetUserWithName(username string) (*app.User, error) {
 }
 
 // AddUser _
-func (us *UserStore) AddUser(u *app.User) error {
+func (us *UserStore) AddUser(u *domain.User) error {
 	tx, err := us.DB.Beginx()
 	if err != nil {
 		return fmt.Errorf("transaction start failed: %w", err)

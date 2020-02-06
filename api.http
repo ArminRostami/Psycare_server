@@ -21,7 +21,7 @@ POST {{api}}/users/auth
 
 ###
 
-POST {{api}}/advisors/
+POST {{api}}/advisors
 Cookie: {{auth.response.headers.Set-Cookie}} 
 
 {
@@ -29,3 +29,9 @@ Cookie: {{auth.response.headers.Set-Cookie}}
     "last_name":"bozorge",
     "description":"failing advisor"
 }
+
+###
+
+GET {{api}}/advisors
+                    ?limit=10
+                    &offset=0
