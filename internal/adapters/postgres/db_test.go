@@ -4,7 +4,7 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 )
 
-const pgDriver = "pgx"
+// const pgDriver = "pgx"
 
 // func TestCreateSchema(t *testing.T) {
 // 	assert := assert.New(t)

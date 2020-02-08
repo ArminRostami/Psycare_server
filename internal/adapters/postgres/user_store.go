@@ -5,12 +5,10 @@ import (
 	"psycare/internal/domain"
 )
 
-// UserStore implements the UserStore interface using postgresql
 type UserStore struct {
 	DB *DB
 }
 
-// GetUserWithName _
 func (us *UserStore) GetUserWithName(username string) (*domain.User, error) {
 	u := &domain.User{}
 	err := us.DB.Con.Get(u, "SELECT * FROM users WHERE (username=$1)", username)
@@ -20,7 +18,6 @@ func (us *UserStore) GetUserWithName(username string) (*domain.User, error) {
 	return u, nil
 }
 
-// AddUser _
 func (us *UserStore) AddUser(u *domain.User) error {
 	return us.DB.namedExec(`INSERT INTO users (username, email, password, credit) 
 			  				VALUES (:username,:email,:password,:credit)`, u)

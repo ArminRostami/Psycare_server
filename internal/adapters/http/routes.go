@@ -20,7 +20,6 @@ type httpError struct {
 	err     error
 }
 
-// Handler is an http handler impl using go-chi
 type Handler struct {
 	*app.AdvisorService
 	*app.UserService
@@ -29,7 +28,6 @@ type Handler struct {
 	Validate *validator.Validate
 }
 
-// SetupRoutes _
 func (h *Handler) SetupRoutes() {
 	h.Router = chi.NewRouter()
 	h.Router.Use(middleware.Logger)
@@ -37,13 +35,15 @@ func (h *Handler) SetupRoutes() {
 	h.Router.Use(render.SetContentType(render.ContentTypeJSON))
 
 	h.Router.Route("/api/v1", func(r chi.Router) {
+		// public routes
 		r.Group(func(r chi.Router) {
 			r.Post("/users", h.createUser)
 			r.Post("/users/auth", h.login)
 			r.Get("/advisors", h.getAdvisors)
+			r.Post("/appointments", h.makeAppointment)
 
 		})
-
+		// authenticated routes
 		r.Group(func(r chi.Router) {
 			r.Use(jwtauth.Verifier(h.Auth))
 			r.Use(jwtauth.Authenticator)
@@ -53,7 +53,6 @@ func (h *Handler) SetupRoutes() {
 	})
 }
 
-// Serve _
 func (h *Handler) Serve() {
 	h.SetupRoutes()
 	log.Print("listening on port 5555...")

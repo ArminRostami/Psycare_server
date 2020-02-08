@@ -7,13 +7,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// UserStore interface defines methods for processing user data
 type UserStore interface {
 	GetUserWithName(username string) (*domain.User, error)
 	AddUser(u *domain.User) error
 }
 
-// UserService extends UserRepo to add more functionality
 type UserService struct {
 	Store UserStore
 }
@@ -26,7 +24,6 @@ func hashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-// AddUser adds the user to repository
 func (s *UserService) AddUser(u *domain.User) error {
 	hash, err := hashPassword(u.Password)
 	if err != nil {
@@ -40,7 +37,6 @@ func (s *UserService) AddUser(u *domain.User) error {
 	return nil
 }
 
-// AuthUser _
 func (s *UserService) AuthUser(username, password string) (*domain.User, error) {
 	u, err := s.Store.GetUserWithName(username)
 	if err != nil {

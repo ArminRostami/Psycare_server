@@ -9,7 +9,6 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 )
 
-// DB _
 type DB struct {
 	Con *sqlx.DB
 }

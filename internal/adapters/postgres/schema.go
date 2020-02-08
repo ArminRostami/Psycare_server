@@ -5,7 +5,6 @@ type schema struct {
 	drop   string
 }
 
-// DefaultSchema is the db schema for the app
 var DefaultSchema = schema{
 	create: `
 

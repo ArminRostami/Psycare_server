@@ -124,3 +124,7 @@ func (h *Handler) getAdvisors(w http.ResponseWriter, r *http.Request) {
 	}
 	renderData(w, r, advisors)
 }
+
+func (h *Handler) makeAppointment(w http.ResponseWriter, r *http.Request) {
+
+}
