@@ -4,28 +4,27 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jmoiron/sqlx"
-	// import postgres driver package for side-effects
 	_ "github.com/jackc/pgx/stdlib"
+	"github.com/jmoiron/sqlx"
 )
 
-type DB struct {
+type PDB struct {
 	Con *sqlx.DB
 }
 
 // Connect _
-func Connect(connStr string) (*DB, error) {
+func Connect(connStr string) (*PDB, error) {
 	const pgDriver = "pgx"
 
 	db, err := sqlx.Connect(pgDriver, connStr)
 	if err != nil {
 		return nil, fmt.Errorf("db connection error: %w", err)
 	}
-	pdb := &DB{Con: db}
+	pdb := &PDB{Con: db}
 	return pdb, nil
 }
 
-func (pdb *DB) exec(query string, args ...interface{}) error {
+func (pdb *PDB) exec(query string, args ...interface{}) error {
 	tx, err := pdb.Con.Beginx()
 	if err != nil {
 		log.Println(err.Error())
@@ -44,7 +43,7 @@ func (pdb *DB) exec(query string, args ...interface{}) error {
 	return nil
 }
 
-func (pdb *DB) namedExec(query string, arg interface{}) error {
+func (pdb *PDB) namedExec(query string, arg interface{}) error {
 	tx, err := pdb.Con.Beginx()
 	if err != nil {
 		log.Println(err.Error())

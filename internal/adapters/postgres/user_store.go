@@ -6,7 +6,7 @@ import (
 )
 
 type UserStore struct {
-	DB *DB
+	DB *PDB
 }
 
 func (us *UserStore) GetUserWithName(username string) (*domain.User, error) {

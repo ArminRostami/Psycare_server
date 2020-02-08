@@ -21,8 +21,7 @@ type httpError struct {
 }
 
 type Handler struct {
-	*app.AdvisorService
-	*app.UserService
+	*app.Services
 	Auth     *jwtauth.JWTAuth
 	Router   *chi.Mux
 	Validate *validator.Validate
@@ -40,7 +39,6 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/users", h.createUser)
 			r.Post("/users/auth", h.login)
 			r.Get("/advisors", h.getAdvisors)
-			r.Post("/appointments", h.makeAppointment)
 
 		})
 		// authenticated routes
@@ -48,6 +46,7 @@ func (h *Handler) SetupRoutes() {
 			r.Use(jwtauth.Verifier(h.Auth))
 			r.Use(jwtauth.Authenticator)
 			r.Post("/advisors", h.createAdvisor)
+			r.Post("/appointments", h.makeAppointment)
 		})
 
 	})

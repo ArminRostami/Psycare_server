@@ -54,30 +54,37 @@ func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) createAdvisor(w http.ResponseWriter, r *http.Request) {
-	_, claims, err := jwtauth.FromContext(r.Context())
-	if err != nil {
-		renderError(w, r, &httpError{"could not get claims", http.StatusInternalServerError, err})
+	id, httpErr := getIDFromClaims(r)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
 		return
 	}
-	id, err := getID(claims)
-	if err != nil {
-		renderError(w, r, &httpError{"could not get id from claims", http.StatusInternalServerError, err})
-		return
-	}
-	a := &domain.Advisor{}
 
-	httpErr := h.decodeAndValidate(r, a)
+	a := &domain.Advisor{}
+	httpErr = h.decodeAndValidate(r, a)
 	if httpErr != nil {
 		renderError(w, r, httpErr)
 		return
 	}
 	a.ID = int64(id)
-	err = h.CreateAdvisor(a)
+	err := h.CreateAdvisor(a)
 	if err != nil {
 		renderError(w, r, &httpError{"failed to create advisor", http.StatusInternalServerError, err})
 		return
 	}
 	renderData(w, r, "advisor registered")
+}
+
+func getIDFromClaims(r *http.Request) (int64, *httpError) {
+	_, claims, err := jwtauth.FromContext(r.Context())
+	if err != nil {
+		return -1, &httpError{"could not get claims", http.StatusInternalServerError, err}
+	}
+	id, err := getID(claims)
+	if err != nil {
+		return -1, &httpError{"could not get id from claims", http.StatusInternalServerError, err}
+	}
+	return id, nil
 }
 
 func getID(claims jwt.MapClaims) (int64, error) {
@@ -88,7 +95,7 @@ func getID(claims jwt.MapClaims) (int64, error) {
 	idi, ok := id.(float64)
 	fmt.Println(idi)
 	if !ok {
-		return -1, fmt.Errorf("could not cast id to int64")
+		return -1, fmt.Errorf("could not cast id to float64")
 	}
 	return int64(idi), nil
 }
@@ -126,5 +133,23 @@ func (h *Handler) getAdvisors(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) makeAppointment(w http.ResponseWriter, r *http.Request) {
+	id, httpErr := getIDFromClaims(r)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
 
+	appt := &domain.Appointment{}
+	httpErr = h.decodeAndValidate(r, appt)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+	appt.UserID = id
+	err := h.CreateAppointment(appt)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to add appointment", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, "appointment added")
 }

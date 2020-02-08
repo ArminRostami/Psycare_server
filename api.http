@@ -35,3 +35,15 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 GET {{api}}/advisors
                     ?limit=10
                     &offset=0
+
+
+###
+
+POST {{api}}/appointments
+Cookie: {{auth.response.headers.Set-Cookie}}
+
+{
+    "advisor_id":4,
+    "start_datetime":"2020-02-15T18:49:53.148Z",
+    "end_datetime":"2020-02-15T19:49:53.148Z"
+}

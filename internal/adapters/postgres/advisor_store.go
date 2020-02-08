@@ -7,7 +7,7 @@ import (
 )
 
 type AdvisorStore struct {
-	DB *DB
+	DB *PDB
 }
 
 func (as *AdvisorStore) CreateAdvisor(advisor *domain.Advisor) error {
