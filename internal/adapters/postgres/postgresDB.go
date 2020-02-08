@@ -12,7 +12,6 @@ type PDB struct {
 	Con *sqlx.DB
 }
 
-// Connect _
 func Connect(connStr string) (*PDB, error) {
 	const pgDriver = "pgx"
 
