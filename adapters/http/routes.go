@@ -31,6 +31,5 @@ func (h *Handler) SetupRoutes() {
 			r.Get("/appointments/user", h.getUserAppointments)
 			r.Get("/appointments/advisor", h.getAdvisorAppointments)
 		})
-
 	})
 }

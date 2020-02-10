@@ -17,8 +17,8 @@ type Handler struct {
 	Validate *validator.Validate
 }
 
-func (h *Handler) Serve() {
+func (h *Handler) Serve(port string) error {
 	h.SetupRoutes()
-	log.Print("listening on port 5555...")
-	log.Fatal(http.ListenAndServe(":5555", h.Router))
+	log.Printf("listening on port %s...", port)
+	return http.ListenAndServe(":"+port, h.Router)
 }
