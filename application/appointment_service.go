@@ -1,6 +1,6 @@
 package app
 
-import "psycare/internal/domain"
+import "psycare/domain"
 
 type AppointmentStore interface {
 	CreateAppointment(appt *domain.Appointment) error

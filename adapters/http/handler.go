@@ -3,7 +3,7 @@ package http
 import (
 	"log"
 	"net/http"
-	app "psycare/internal/application"
+	app "psycare/application"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/jwtauth"

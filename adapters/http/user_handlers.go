@@ -2,7 +2,7 @@ package http
 
 import (
 	"net/http"
-	"psycare/internal/domain"
+	"psycare/domain"
 
 	"github.com/dgrijalva/jwt-go"
 )

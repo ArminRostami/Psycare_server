@@ -2,7 +2,7 @@ package http
 
 import (
 	"net/http"
-	"psycare/internal/domain"
+	"psycare/domain"
 )
 
 func (h *Handler) makeAppointment(w http.ResponseWriter, r *http.Request) {

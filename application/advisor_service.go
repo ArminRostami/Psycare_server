@@ -1,6 +1,6 @@
 package app
 
-import "psycare/internal/domain"
+import "psycare/domain"
 
 type AdvisorStore interface {
 	CreateAdvisor(advisor *domain.Advisor) error

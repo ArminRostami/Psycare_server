@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-	"psycare/internal/domain"
+	"psycare/domain"
 
 	"golang.org/x/crypto/bcrypt"
 )

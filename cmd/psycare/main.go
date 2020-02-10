@@ -3,12 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"psycare/adapters/http"
+	"psycare/adapters/postgres"
+	app "psycare/application"
 	"reflect"
 	"strings"
-
-	"psycare/internal/adapters/http"
-	"psycare/internal/adapters/postgres"
-	app "psycare/internal/application"
 
 	"github.com/go-chi/jwtauth"
 	"github.com/go-playground/validator"

@@ -3,7 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
-	"psycare/internal/domain"
+	"psycare/domain"
 	"time"
 )
 
