@@ -5,8 +5,8 @@
 POST {{api}}/users
 
 {
-    "username":"user23",
-    "email":"abceed@gmail.com",
+    "username":"user2",
+    "email":"abceeas@gmail.com",
     "password":"omegalul"
 }
 
@@ -16,7 +16,7 @@ POST {{api}}/users
 POST {{api}}/users/auth
 
 {
-    "username":"user23",
+    "username":"adv1",
     "password":"omegalul"
 }
 

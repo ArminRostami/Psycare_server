@@ -9,9 +9,10 @@ import (
 )
 
 const pgDriver = "pgx"
-const connStr = "user=postgres password=example host=localhost port=5432 database=postgres sslmode=disable"
+const connStr = "user=postgres password=example host=localhost port=5432 database=psycare sslmode=disable"
 
 func TestCreateSchema(t *testing.T) {
+
 	assert := assert.New(t)
 	db, err := sqlx.Connect(pgDriver, connStr)
 	assert.NoError(err)
