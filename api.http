@@ -1,25 +1,26 @@
 @root = http://127.0.0.1:5555
 @api = {{root}}/api/v1
 
+### Create user:
 POST {{api}}/users
 
 {
-    "username":"armin",
-    "email":"abced@gmail.com",
+    "username":"user3",
+    "email":"abcee@gmail.com",
     "password":"omegalul"
 }
 
-###
+### Login user:
 
 # @name auth
 POST {{api}}/users/auth
 
 {
-    "username":"armin",
+    "username":"user3",
     "password":"omegalul"
 }
 
-###
+### Create advisor:
 
 POST {{api}}/advisors
 Cookie: {{auth.response.headers.Set-Cookie}} 
@@ -30,20 +31,41 @@ Cookie: {{auth.response.headers.Set-Cookie}}
     "description":"failing advisor"
 }
 
-###
+### Get advisors with pagination:
 
 GET {{api}}/advisors
                     ?limit=10
                     &offset=0
 
 
-###
+### Create appointment:
 
 POST {{api}}/appointments
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "advisor_id":4,
+    "advisor_id":1,
     "start_datetime":"2020-02-15T18:49:53.148Z",
     "end_datetime":"2020-02-15T19:49:53.148Z"
+}
+
+### Add schedule:
+
+POST {{api}}/advisors/schedule
+Cookie: {{auth.response.headers.Set-Cookie}}
+
+{
+    "periods":
+        [
+            {
+                "day_of_week":4,
+                "start_time":"2020-02-12T12:04:47+03:30",
+                "end_time":"2020-02-12T12:34:47+03:30"
+            },
+            {
+                "day_of_week":6,
+                "start_time":"2020-02-14T12:04:47+03:30",
+                "end_time":"2020-02-14T12:34:47+03:30"
+            }
+        ]
 }

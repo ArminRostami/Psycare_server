@@ -1,8 +1,8 @@
 package http
 
 import (
-	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
@@ -17,6 +17,7 @@ type httpError struct {
 }
 
 func renderError(w http.ResponseWriter, r *http.Request, e *httpError) {
+	log.Printf("%+v", e.err)
 	render.Status(r, e.status)
 	render.JSON(w, r, render.M{"type": e.errType, "message": e.err.Error(), "status": e.status})
 }
@@ -43,7 +44,6 @@ func getID(claims jwt.MapClaims) (int64, error) {
 		return -1, fmt.Errorf("claims does not include id")
 	}
 	idi, ok := id.(float64)
-	fmt.Println(idi)
 	if !ok {
 		return -1, fmt.Errorf("could not cast id to float64")
 	}
@@ -51,7 +51,7 @@ func getID(claims jwt.MapClaims) (int64, error) {
 }
 
 func (h *Handler) decodeAndValidate(r *http.Request, dst interface{}) *httpError {
-	err := json.NewDecoder(r.Body).Decode(dst)
+	err := render.DecodeJSON(r.Body, dst)
 	if err != nil {
 		return &httpError{status: http.StatusBadRequest, errType: "request decoding error", err: err}
 	}

@@ -29,7 +29,7 @@ func (pdb *PDB) exec(query string, args ...interface{}) error {
 		log.Println(err.Error())
 		return fmt.Errorf("could not initialize db transaction")
 	}
-	_, err = tx.Exec(query, args)
+	_, err = tx.Exec(query, args...)
 	if err != nil {
 		log.Println(err.Error())
 		return fmt.Errorf("could not execute query")

@@ -27,6 +27,7 @@ func (h *Handler) SetupRoutes() {
 			// authenticated routes
 			r.Post("/advisors", h.createAdvisor)
 			r.Post("/appointments", h.makeAppointment)
+			r.Post("/advisors/schedule", h.addSchedule)
 		})
 
 	})

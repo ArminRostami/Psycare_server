@@ -59,3 +59,25 @@ func (h *Handler) getAdvisors(w http.ResponseWriter, r *http.Request) {
 	}
 	renderData(w, r, advisors)
 }
+
+func (h *Handler) addSchedule(w http.ResponseWriter, r *http.Request) {
+	id, httpErr := getIDFromClaims(r)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+
+	sch := &domain.Schedule{}
+	httpErr = h.decodeAndValidate(r, sch)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+	sch.AdvisorID = id
+	err := h.AddSchedule(sch)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to add schedule", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, sch)
+}

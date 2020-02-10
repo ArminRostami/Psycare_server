@@ -27,8 +27,8 @@ func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
 		Username string `json:"username" validate:"required"`
 		Password string `json:"password" validate:"required"`
 	}
-	req := &request{}
 
+	req := &request{}
 	httpErr := h.decodeAndValidate(r, req)
 	if httpErr != nil {
 		renderError(w, r, httpErr)
