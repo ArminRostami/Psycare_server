@@ -26,3 +26,26 @@ func (h *Handler) makeAppointment(w http.ResponseWriter, r *http.Request) {
 	}
 	renderData(w, r, "appointment added")
 }
+
+func (h *Handler) getAppointmentsHandler(w http.ResponseWriter, r *http.Request, forUser bool) {
+	id, httpErr := getIDFromClaims(r)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+
+	appts, err := h.GetAppointments(id, forUser)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to get appointments", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, appts)
+}
+
+func (h *Handler) getUserAppointments(w http.ResponseWriter, r *http.Request) {
+	h.getAppointmentsHandler(w, r, true)
+}
+
+func (h *Handler) getAdvisorAppointments(w http.ResponseWriter, r *http.Request) {
+	h.getAppointmentsHandler(w, r, false)
+}

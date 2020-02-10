@@ -26,8 +26,10 @@ func (h *Handler) SetupRoutes() {
 			r.Use(jwtauth.Authenticator)
 			// authenticated routes
 			r.Post("/advisors", h.createAdvisor)
-			r.Post("/appointments", h.makeAppointment)
 			r.Post("/advisors/schedule", h.addSchedule)
+			r.Post("/appointments", h.makeAppointment)
+			r.Get("/appointments/user", h.getUserAppointments)
+			r.Get("/appointments/advisor", h.getAdvisorAppointments)
 		})
 
 	})

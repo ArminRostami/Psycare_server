@@ -5,8 +5,8 @@
 POST {{api}}/users
 
 {
-    "username":"user3",
-    "email":"abcee@gmail.com",
+    "username":"user23",
+    "email":"abceed@gmail.com",
     "password":"omegalul"
 }
 
@@ -16,9 +16,11 @@ POST {{api}}/users
 POST {{api}}/users/auth
 
 {
-    "username":"user3",
+    "username":"user23",
     "password":"omegalul"
 }
+
+
 
 ### Create advisor:
 
@@ -44,12 +46,12 @@ POST {{api}}/appointments
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "advisor_id":1,
-    "start_datetime":"2020-02-15T18:49:53.148Z",
-    "end_datetime":"2020-02-15T19:49:53.148Z"
+    "advisor_id":2,
+    "start_datetime":"2020-02-16T18:49:53.148Z",
+    "end_datetime":"2020-02-16T19:49:53.148Z"
 }
 
-### Add schedule:
+### Add schedule for advisors:
 
 POST {{api}}/advisors/schedule
 Cookie: {{auth.response.headers.Set-Cookie}}
@@ -69,3 +71,14 @@ Cookie: {{auth.response.headers.Set-Cookie}}
             }
         ]
 }
+
+### Get appointments for user:
+
+GET {{api}}/appointments/user
+Cookie: {{auth.response.headers.Set-Cookie}}
+
+
+### Get appointments for advisor:
+
+GET {{api}}/appointments/advisor
+Cookie: {{auth.response.headers.Set-Cookie}}
