@@ -7,10 +7,7 @@ POST {{api}}/users
 {
     "username":"user123",
     "email":"abceesasdfs@gmail.com",
-    "password":"omegalul",
-    "roles":[
-        "admin"
-    ]
+    "password":"omegalul"
 }
 
 ### Get User with ID:

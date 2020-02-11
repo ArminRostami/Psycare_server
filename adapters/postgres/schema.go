@@ -13,7 +13,7 @@ var DefaultSchema = schema{
 		username varchar (60) NOT NULL,
 		email text UNIQUE NOT NULL,
 		password varchar (60) NOT NULL,
-		credit numeric (8,3) NOT NULL DEFAULT 100.000
+		credit INTEGER NOT NULL DEFAULT 250
 	);
 	
 	CREATE TABLE advisors (
@@ -22,6 +22,7 @@ var DefaultSchema = schema{
 		last_name varchar (45) NOT NULL,
 		description text NOT NULL,
 		verified boolean NOT NULL DEFAULT TRUE,
+		hourly_fee INTEGER NOT NULL DEFAULT 30,
 		PRIMARY KEY (id)
 	);
 	
@@ -40,7 +41,8 @@ var DefaultSchema = schema{
 		user_id integer REFERENCES users(id) ON DELETE CASCADE,
 		advisor_id integer REFERENCES advisors(id) ON DELETE CASCADE,
 		start_datetime timestamptz NOT NULL,
-		end_datetime timestamptz NOT NULL
+		end_datetime timestamptz NOT NULL,
+		cancelled boolean NOT NULL DEFAULT FALSE
 	);
 	
 	CREATE TABLE schedules (
@@ -54,7 +56,7 @@ var DefaultSchema = schema{
 	
 	CREATE TABLE ratings (
 		user_id integer REFERENCES users(id),
-		advisor_id integer REFERENCES advisors(id) ON DELETE CASCADE,
+		appointment_id integer REFERENCES appointments(id),
 		score numeric (3,2) NOT NULL
 	);
 	`,

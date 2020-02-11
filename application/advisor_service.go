@@ -9,17 +9,26 @@ type AdvisorStore interface {
 }
 
 type AdvisorService struct {
-	Store AdvisorStore
+	AdvStore  AdvisorStore
+	RoleStore RoleStore
 }
 
 func (as *AdvisorService) CreateAdvisor(advisor *domain.Advisor) error {
-	return as.Store.CreateAdvisor(advisor)
+	err := as.AdvStore.CreateAdvisor(advisor)
+	if err != nil {
+		return err
+	}
+	// err = as.RoleStore.AddRole(advisor.ID, ROLE_ADVISOR)
+	// if err != nil {
+	// 	return err
+	// }
+	return nil
 }
 
 func (as *AdvisorService) GetAdvisors(verified bool, limit, offset int) (*[]domain.Advisor, error) {
-	return as.Store.GetAdvisors(verified, limit, offset)
+	return as.AdvStore.GetAdvisors(verified, limit, offset)
 }
 
 func (as *AdvisorService) AddSchedule(sch *domain.Schedule) error {
-	return as.Store.AddSchedule(sch)
+	return as.AdvStore.AddSchedule(sch)
 }

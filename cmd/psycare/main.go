@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/go-playground/validator"
 	"github.com/joho/godotenv"
+	"github.com/pkg/errors"
 )
 
 var required = []string{
@@ -33,13 +34,14 @@ func bootstrap() error {
 
 	pdb, err := postgres.Connect(getConnString(env))
 	if err != nil {
-		return fmt.Errorf("failed to connect to database: %w", err)
+		return errors.Wrap(err, "failed to connect to database")
 	}
+	roleStore := &postgres.RoleStore{DB: pdb}
 
 	uss := &app.UserService{Store: &postgres.UserStore{DB: pdb}}
-	ads := &app.AdvisorService{Store: &postgres.AdvisorStore{DB: pdb}}
+	ads := &app.AdvisorService{AdvStore: &postgres.AdvisorStore{DB: pdb}, RoleStore: roleStore}
 	aps := &app.AppointmentService{Store: &postgres.AppointmentStore{DB: pdb}}
-	rls := &app.RoleService{Store: &postgres.RoleStore{DB: pdb}}
+	rls := &app.RoleService{Store: roleStore}
 
 	srv := &app.Services{UserService: uss, AdvisorService: ads, AppointmentService: aps, RoleService: rls}
 
@@ -77,13 +79,13 @@ func getValidator() *validator.Validate {
 }
 
 func getEnvMap(keys []string) (map[string]string, error) {
-	env, err := godotenv.Read("dev.env")
+	env, err := godotenv.Read("../../.env")
 	if err != nil {
-		return nil, fmt.Errorf("could not read env file: %w", err)
+		return nil, errors.Wrap(err, "could not read env file")
 	}
 	for _, key := range keys {
 		if _, ok := env[key]; !ok {
-			return nil, fmt.Errorf(`key "%s" is missing from .env file.`, key)
+			return nil, errors.Errorf(`key "%s" is missing from .env file.`, key)
 		}
 
 	}

@@ -1,13 +1,13 @@
 package http
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
+	"github.com/pkg/errors"
 )
 
 type httpError struct {
@@ -17,9 +17,9 @@ type httpError struct {
 }
 
 func renderError(w http.ResponseWriter, r *http.Request, e *httpError) {
-	log.Printf("%+v", e.err)
+	log.Printf("%+v\n", e.err)
 	render.Status(r, e.status)
-	render.JSON(w, r, render.M{"type": e.errType, "message": e.err.Error(), "status": e.status})
+	render.JSON(w, r, render.M{"message": e.errType, "cause": e.err.Error(), "status": e.status})
 }
 
 func renderData(w http.ResponseWriter, r *http.Request, data interface{}) {
@@ -41,11 +41,11 @@ func getIDFromClaims(r *http.Request) (int64, *httpError) {
 func getID(claims jwt.MapClaims) (int64, error) {
 	id, exists := claims["id"]
 	if !exists {
-		return -1, fmt.Errorf("claims does not include id")
+		return -1, errors.New("claims does not include id")
 	}
 	idi, ok := id.(float64)
 	if !ok {
-		return -1, fmt.Errorf("could not cast id to float64")
+		return -1, errors.New("could not cast id to float64")
 	}
 	return int64(idi), nil
 }
@@ -53,6 +53,7 @@ func getID(claims jwt.MapClaims) (int64, error) {
 func (h *Handler) decodeAndValidate(r *http.Request, dst interface{}) *httpError {
 	err := render.DecodeJSON(r.Body, dst)
 	if err != nil {
+		err = errors.Wrap(err, "request decoding error")
 		return &httpError{status: http.StatusBadRequest, errType: "request decoding error", err: err}
 	}
 	err = h.Validate.Struct(dst)

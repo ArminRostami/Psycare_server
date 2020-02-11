@@ -1,8 +1,9 @@
 package postgres
 
 import (
-	"fmt"
 	"psycare/domain"
+
+	"github.com/pkg/errors"
 )
 
 type UserStore struct {
@@ -13,7 +14,7 @@ func (us *UserStore) GetUserWithName(username string) (*domain.User, error) {
 	u := &domain.User{}
 	err := us.DB.Con.Get(u, "SELECT * FROM users WHERE (username=$1)", username)
 	if err != nil {
-		return nil, fmt.Errorf("no such user: %w", err)
+		return nil, errors.Wrap(err, "no such user")
 	}
 	return u, nil
 }
@@ -22,7 +23,7 @@ func (us *UserStore) GetUserWithID(id int64) (*domain.User, error) {
 	u := &domain.User{}
 	err := us.DB.Con.Get(u, "SELECT * FROM users WHERE (id=$1)", id)
 	if err != nil {
-		return nil, fmt.Errorf("no such user: %w", err)
+		return nil, errors.Wrap(err, "no such user")
 	}
 	return u, nil
 }
@@ -32,8 +33,8 @@ func (us *UserStore) AddUser(u *domain.User) error {
 			  				VALUES (:username,:email,:password,:credit)`, u)
 }
 
-func (us *UserStore) changeDesc(id int64, desc string) error {
-	return us.DB.exec(`INSERT INTO advisors (id, description) VALUES ($1, $2) 
-			 		   ON CONFLICT(id) DO UPDATE 
-	 		 		   SET description = $2`, id, desc)
-}
+// func (us *UserStore) changeDesc(id int64, desc string) error {
+// 	return us.DB.exec(`INSERT INTO advisors (id, description) VALUES ($1, $2)
+// 			 		   ON CONFLICT(id) DO UPDATE
+// 	 		 		   SET description = $2`, id, desc)
+// }

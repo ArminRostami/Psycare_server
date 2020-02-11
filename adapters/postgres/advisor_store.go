@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"psycare/domain"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type AdvisorStore struct {
@@ -24,7 +26,7 @@ func (as *AdvisorStore) GetAdvisors(verified bool, limit, offset int) (*[]domain
 								   LIMIT $2 OFFSET $3`, verified, limit, offset)
 
 	if err != nil && err != sql.ErrNoRows {
-		return nil, fmt.Errorf("failed to receive advisors: %w", err)
+		return nil, errors.Wrap(err, "failed to receive advisors")
 	}
 	return advisors, nil
 }
@@ -40,7 +42,7 @@ func (as *AdvisorStore) AddSchedule(sch *domain.Schedule) error {
 		}
 	}
 	if errs != "" {
-		return fmt.Errorf("failed to add schedule: %s", errs)
+		return errors.Errorf("failed to add schedule: %s", errs)
 	}
 	return nil
 }

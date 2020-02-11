@@ -1,11 +1,9 @@
 package postgres
 
 import (
-	"fmt"
-	"log"
-
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 )
 
 type PDB struct {
@@ -17,7 +15,7 @@ func Connect(connStr string) (*PDB, error) {
 
 	db, err := sqlx.Connect(pgDriver, connStr)
 	if err != nil {
-		return nil, fmt.Errorf("db connection error: %w", err)
+		return nil, errors.Wrap(err, "db connection error")
 	}
 	return &PDB{Con: db}, nil
 }
@@ -25,18 +23,16 @@ func Connect(connStr string) (*PDB, error) {
 func (pdb *PDB) exec(query string, args ...interface{}) error {
 	tx, err := pdb.Con.Beginx()
 	if err != nil {
-		log.Println(err.Error())
-		return fmt.Errorf("could not initialize db transaction")
+		return errors.Wrap(err, "could not initialize db transaction")
 	}
 	_, err = tx.Exec(query, args...)
 	if err != nil {
-		log.Println(err.Error())
-		return fmt.Errorf("could not execute query")
+		return errors.Wrap(err, "could not execute query")
+
 	}
 	err = tx.Commit()
 	if err != nil {
-		log.Println(err.Error())
-		return fmt.Errorf("could not commit db transaction")
+		return errors.Wrap(err, "could not commit db transaction")
 	}
 	return nil
 }
@@ -44,18 +40,16 @@ func (pdb *PDB) exec(query string, args ...interface{}) error {
 func (pdb *PDB) namedExec(query string, arg interface{}) error {
 	tx, err := pdb.Con.Beginx()
 	if err != nil {
-		log.Println(err.Error())
-		return fmt.Errorf("could not initialize db transaction")
+		return errors.Wrap(err, "could not initialize db transaction")
 	}
 	_, err = tx.NamedExec(query, arg)
 	if err != nil {
-		log.Println(err.Error())
-		return fmt.Errorf("could not execute query")
+		return errors.Wrap(err, "could not execute query")
 	}
 	err = tx.Commit()
 	if err != nil {
-		log.Println(err.Error())
-		return fmt.Errorf("could not commit db transaction")
+		return errors.Wrap(err, "could not commit db transaction")
+
 	}
 	return nil
 }

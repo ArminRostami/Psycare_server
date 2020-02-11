@@ -1,6 +1,8 @@
 package postgres
 
-import "fmt"
+import (
+	"github.com/pkg/errors"
+)
 
 type RoleStore struct {
 	DB *PDB
@@ -12,7 +14,7 @@ func (r *RoleStore) GetRoles(id int64) (*[]string, error) {
 	FROM (SELECT role_id FROM user_roles WHERE user_id=$1) as ur 
 	INNER JOIN roles on ur.role_id=roles.id `, id)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get roles: %w", err)
+		return nil, errors.Wrap(err, "failed to get roles")
 	}
 	return roles, nil
 }
