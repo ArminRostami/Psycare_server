@@ -9,6 +9,7 @@ import (
 
 type UserStore interface {
 	GetUserWithName(username string) (*domain.User, error)
+	GetUserWithID(id int64) (*domain.User, error)
 	AddUser(u *domain.User) error
 }
 
@@ -24,21 +25,21 @@ func hashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-func (s *UserService) AddUser(u *domain.User) error {
+func (us *UserService) AddUser(u *domain.User) error {
 	hash, err := hashPassword(u.Password)
 	if err != nil {
 		return err
 	}
 	u.Password = hash
-	err = s.Store.AddUser(u)
+	err = us.Store.AddUser(u)
 	if err != nil {
 		return fmt.Errorf("error adding user: %w", err)
 	}
 	return nil
 }
 
-func (s *UserService) AuthUser(username, password string) (*domain.User, error) {
-	u, err := s.Store.GetUserWithName(username)
+func (us *UserService) AuthUser(username, password string) (*domain.User, error) {
+	u, err := us.Store.GetUserWithName(username)
 	if err != nil {
 		return nil, err
 	}
@@ -48,4 +49,8 @@ func (s *UserService) AuthUser(username, password string) (*domain.User, error) 
 	}
 	u.Password = ""
 	return u, nil
+}
+
+func (us *UserService) GetUserWithID(id int64) (*domain.User, error) {
+	return us.Store.GetUserWithID(id)
 }

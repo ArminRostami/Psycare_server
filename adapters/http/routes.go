@@ -25,6 +25,7 @@ func (h *Handler) SetupRoutes() {
 			r.Use(jwtauth.Verifier(h.Auth))
 			r.Use(jwtauth.Authenticator)
 			// authenticated routes
+			r.Get("/users", h.getUser)
 			r.Post("/advisors", h.createAdvisor)
 			r.Post("/advisors/schedule", h.addSchedule)
 			r.Post("/appointments", h.makeAppointment)

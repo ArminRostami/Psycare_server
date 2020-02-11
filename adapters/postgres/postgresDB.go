@@ -19,8 +19,7 @@ func Connect(connStr string) (*PDB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("db connection error: %w", err)
 	}
-	pdb := &PDB{Con: db}
-	return pdb, nil
+	return &PDB{Con: db}, nil
 }
 
 func (pdb *PDB) exec(query string, args ...interface{}) error {

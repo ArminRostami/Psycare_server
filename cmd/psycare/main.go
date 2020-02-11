@@ -39,8 +39,9 @@ func bootstrap() error {
 	uss := &app.UserService{Store: &postgres.UserStore{DB: pdb}}
 	ads := &app.AdvisorService{Store: &postgres.AdvisorStore{DB: pdb}}
 	aps := &app.AppointmentService{Store: &postgres.AppointmentStore{DB: pdb}}
+	rls := &app.RoleService{Store: &postgres.RoleStore{DB: pdb}}
 
-	srv := &app.Services{UserService: uss, AdvisorService: ads, AppointmentService: aps}
+	srv := &app.Services{UserService: uss, AdvisorService: ads, AppointmentService: aps, RoleService: rls}
 
 	v := getValidator()
 

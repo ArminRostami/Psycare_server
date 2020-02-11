@@ -18,6 +18,15 @@ func (us *UserStore) GetUserWithName(username string) (*domain.User, error) {
 	return u, nil
 }
 
+func (us *UserStore) GetUserWithID(id int64) (*domain.User, error) {
+	u := &domain.User{}
+	err := us.DB.Con.Get(u, "SELECT * FROM users WHERE (id=$1)", id)
+	if err != nil {
+		return nil, fmt.Errorf("no such user: %w", err)
+	}
+	return u, nil
+}
+
 func (us *UserStore) AddUser(u *domain.User) error {
 	return us.DB.namedExec(`INSERT INTO users (username, email, password, credit) 
 			  				VALUES (:username,:email,:password,:credit)`, u)

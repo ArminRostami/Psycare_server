@@ -2,6 +2,7 @@ package http
 
 import (
 	"net/http"
+	app "psycare/application"
 	"psycare/domain"
 	"strconv"
 )
@@ -19,13 +20,18 @@ func (h *Handler) createAdvisor(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, httpErr)
 		return
 	}
-	a.ID = int64(id)
+	a.ID = id
 	err := h.CreateAdvisor(a)
 	if err != nil {
 		renderError(w, r, &httpError{"failed to create advisor", http.StatusInternalServerError, err})
 		return
 	}
-	renderData(w, r, "advisor registered")
+	err = h.AddRole(id, app.ROLE_ADVISOR)
+	if err != nil {
+		renderError(w, r, &httpError{"advisor created but role addition failed", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, a)
 }
 
 func (h *Handler) getAdvisors(w http.ResponseWriter, r *http.Request) {

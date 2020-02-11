@@ -5,18 +5,25 @@
 POST {{api}}/users
 
 {
-    "username":"user2",
-    "email":"abceeas@gmail.com",
-    "password":"omegalul"
+    "username":"user123",
+    "email":"abceesasdfs@gmail.com",
+    "password":"omegalul",
+    "roles":[
+        "admin"
+    ]
 }
 
-### Login user:
+### Get User with ID:
+GET {{api}}/users
+Cookie: {{auth.response.headers.Set-Cookie}} 
 
+
+### Login user:
 # @name auth
 POST {{api}}/users/auth
 
 {
-    "username":"adv1",
+    "username":"user123",
     "password":"omegalul"
 }
 
