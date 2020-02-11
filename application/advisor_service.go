@@ -18,10 +18,10 @@ func (as *AdvisorService) CreateAdvisor(advisor *domain.Advisor) error {
 	if err != nil {
 		return err
 	}
-	// err = as.RoleStore.AddRole(advisor.ID, ROLE_ADVISOR)
-	// if err != nil {
-	// 	return err
-	// }
+	err = as.RoleStore.AddRole(advisor.ID, ROLE_ADVISOR)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

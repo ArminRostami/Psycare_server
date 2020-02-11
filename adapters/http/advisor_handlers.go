@@ -1,9 +1,7 @@
 package http
 
 import (
-	"fmt"
 	"net/http"
-	app "psycare/application"
 	"psycare/domain"
 	"strconv"
 )
@@ -27,13 +25,7 @@ func (h *Handler) createAdvisor(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, &httpError{"failed to create advisor", http.StatusInternalServerError, err})
 		return
 	}
-	fmt.Println(a)
-	// TODO: call add role in advisor service and remove this:
-	err = h.AddRole(id, app.ROLE_ADVISOR)
-	if err != nil {
-		renderError(w, r, &httpError{"advisor created but role addition failed", http.StatusInternalServerError, err})
-		return
-	}
+
 	renderData(w, r, a)
 }
 

@@ -32,8 +32,8 @@ var DefaultSchema = schema{
 	);
 	
 	CREATE TABLE user_roles (
-		user_id integer REFERENCES users(id) ON DELETE CASCADE,
-		role_id integer REFERENCES roles(id) ON DELETE CASCADE
+		user_id integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+		role_id integer NOT NULL REFERENCES roles(id) ON DELETE CASCADE
 	);
 	
 	CREATE TABLE appointments (
