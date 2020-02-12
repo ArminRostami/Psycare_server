@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"psycare/domain"
 	"strconv"
+
+	"github.com/go-chi/chi"
 )
 
 func (h *Handler) createAdvisor(w http.ResponseWriter, r *http.Request) {
@@ -81,4 +83,20 @@ func (h *Handler) addSchedule(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	renderData(w, r, sch)
+}
+
+func (h *Handler) getAvgRating(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "adv_id")
+	id64, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		renderError(w, r, &httpError{"no advisor id in url", http.StatusBadRequest, err})
+		return
+	}
+
+	rating, err := h.GetAvgRating(id64)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to get avg rating", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, rating)
 }

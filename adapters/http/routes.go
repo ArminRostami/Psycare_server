@@ -19,6 +19,7 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/users", h.createUser)
 			r.Post("/users/auth", h.login)
 			r.Get("/advisors", h.getAdvisors)
+			r.Get("/advisors/{adv_id}/rating", h.getAvgRating)
 
 		})
 		r.Group(func(r chi.Router) {
@@ -31,6 +32,7 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/appointments", h.makeAppointment)
 			r.Get("/appointments/user", h.getUserAppointments)
 			r.Get("/appointments/advisor", h.getAdvisorAppointments)
+			r.Post("/appointments/rate", h.rateAppointment)
 		})
 	})
 }

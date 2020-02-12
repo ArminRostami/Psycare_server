@@ -11,9 +11,9 @@ var DefaultSchema = schema{
 	CREATE TABLE users (
 		id serial PRIMARY KEY,
 		username varchar (60) NOT NULL,
-		email text UNIQUE NOT NULL,
+		email text NOT NULL CONSTRAINT unique_email UNIQUE,
 		password varchar (60) NOT NULL,
-		credit INTEGER NOT NULL DEFAULT 250
+		credit INTEGER DEFAULT 250 NOT NULL 
 	);
 	
 	CREATE TABLE advisors (
@@ -30,7 +30,8 @@ var DefaultSchema = schema{
 		id serial PRIMARY KEY,
 		name varchar (30) NOT NULL
 	);
-	
+	INSERT INTO roles(id, name) VALUES (1, 'admin'),(2, 'advisor');
+
 	CREATE TABLE user_roles (
 		user_id integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 		role_id integer NOT NULL REFERENCES roles(id) ON DELETE CASCADE
@@ -38,15 +39,15 @@ var DefaultSchema = schema{
 	
 	CREATE TABLE appointments (
 		id serial PRIMARY KEY,
-		user_id integer REFERENCES users(id) ON DELETE CASCADE,
-		advisor_id integer REFERENCES advisors(id) ON DELETE CASCADE,
+		user_id integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+		advisor_id integer NOT NULL REFERENCES advisors(id) ON DELETE CASCADE,
 		start_datetime timestamptz NOT NULL,
 		end_datetime timestamptz NOT NULL,
 		cancelled boolean NOT NULL DEFAULT FALSE
 	);
 	
 	CREATE TABLE schedules (
-		advisor_id integer REFERENCES advisors(id) ON DELETE CASCADE,
+		advisor_id integer NOT NULL REFERENCES advisors(id) ON DELETE CASCADE,
 		day_of_week smallint NOT NULL,
 		start_time time with time zone NOT NULL,
 		end_time time with time zone NOT NULL,
@@ -55,10 +56,13 @@ var DefaultSchema = schema{
 	);
 	
 	CREATE TABLE ratings (
-		user_id integer REFERENCES users(id),
-		appointment_id integer REFERENCES appointments(id),
-		score numeric (3,2) NOT NULL
+		user_id integer NOT NULL REFERENCES users(id),
+		appointment_id integer NOT NULL REFERENCES appointments(id),
+		score integer NOT NULL,
+		CONSTRAINT can_rate_once UNIQUE (user_id, appointment_id),
+		CHECK (score >=0 AND score <= 10)
 	);
+
 	`,
 
 	drop: `

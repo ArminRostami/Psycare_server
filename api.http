@@ -5,8 +5,8 @@
 POST {{api}}/users
 
 {
-    "username":"user123",
-    "email":"abceesasdfs@gmail.com",
+    "username":"user2",
+    "email":"abceesadfs@gmail.com",
     "password":"omegalul"
 }
 
@@ -20,7 +20,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 POST {{api}}/users/auth
 
 {
-    "username":"user123",
+    "username":"user2",
     "password":"omegalul"
 }
 
@@ -50,7 +50,7 @@ POST {{api}}/appointments
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "advisor_id":2,
+    "advisor_id":1,
     "start_datetime":"2020-02-16T18:49:53.148Z",
     "end_datetime":"2020-02-16T19:49:53.148Z"
 }
@@ -65,13 +65,13 @@ Cookie: {{auth.response.headers.Set-Cookie}}
         [
             {
                 "day_of_week":4,
-                "start_time":"2020-02-12T12:04:47+03:30",
-                "end_time":"2020-02-12T12:34:47+03:30"
+                "start_time":"2020-02-14T12:04:47+03:30",
+                "end_time":"2020-02-14T12:34:47+03:30"
             },
             {
                 "day_of_week":6,
-                "start_time":"2020-02-14T12:04:47+03:30",
-                "end_time":"2020-02-14T12:34:47+03:30"
+                "start_time":"2020-02-15T12:04:47+03:30",
+                "end_time":"2020-02-15T12:34:47+03:30"
             }
         ]
 }
@@ -86,3 +86,17 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 
 GET {{api}}/appointments/advisor
 Cookie: {{auth.response.headers.Set-Cookie}}
+
+
+### Add rating for an appointment:
+POST {{api}}/appointments/rate
+Cookie: {{auth.response.headers.Set-Cookie}}
+
+{
+    "appointment_id":3,
+    "score":7
+}
+
+### Get avg rating for an advisor:
+@adv_id=1
+GET {{api}}/advisors/{{adv_id}}/rating

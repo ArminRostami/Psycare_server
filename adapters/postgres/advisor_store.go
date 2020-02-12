@@ -52,3 +52,15 @@ func getTime(src time.Time) string {
 	zone, _ := src.Zone()
 	return fmt.Sprintf("%d:%d:%d%s", h, m, s, zone)
 }
+
+func (as *AdvisorStore) GetAvgRating(advisorID int64) (float64, error) {
+	avg := new(float64)
+	err := as.DB.Con.Get(avg, `SELECT AVG(score)
+	FROM (SELECT id FROM appointments WHERE advisor_id=$1) as aps 
+	INNER JOIN ratings ON aps.id=ratings.appointment_id
+	`, advisorID)
+	if err != nil {
+		return 0, errors.Wrap(err, "could not get average rating")
+	}
+	return *avg, nil
+}

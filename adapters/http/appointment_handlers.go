@@ -27,7 +27,7 @@ func (h *Handler) makeAppointment(w http.ResponseWriter, r *http.Request) {
 	renderData(w, r, "appointment added")
 }
 
-func (h *Handler) getAppointmentsHandler(w http.ResponseWriter, r *http.Request, forUser bool) {
+func (h *Handler) appointmentsHandler(w http.ResponseWriter, r *http.Request, forUser bool) {
 	id, httpErr := getIDFromClaims(r)
 	if httpErr != nil {
 		renderError(w, r, httpErr)
@@ -43,9 +43,33 @@ func (h *Handler) getAppointmentsHandler(w http.ResponseWriter, r *http.Request,
 }
 
 func (h *Handler) getUserAppointments(w http.ResponseWriter, r *http.Request) {
-	h.getAppointmentsHandler(w, r, true)
+	h.appointmentsHandler(w, r, true)
 }
 
 func (h *Handler) getAdvisorAppointments(w http.ResponseWriter, r *http.Request) {
-	h.getAppointmentsHandler(w, r, false)
+	h.appointmentsHandler(w, r, false)
+}
+
+func (h *Handler) rateAppointment(w http.ResponseWriter, r *http.Request) {
+	id, httpErr := getIDFromClaims(r)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+
+	rating := &domain.Rating{UserID: id}
+	httpErr = h.decodeAndValidate(r, rating)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+
+	err := h.AddRating(rating)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to add rating", http.StatusInternalServerError, err})
+		return
+	}
+
+	renderData(w, r, rating)
+
 }

@@ -6,6 +6,7 @@ type AdvisorStore interface {
 	CreateAdvisor(advisor *domain.Advisor) error
 	GetAdvisors(verified bool, limit, offset int) (*[]domain.Advisor, error)
 	AddSchedule(sch *domain.Schedule) error
+	GetAvgRating(advisorID int64) (float64, error)
 }
 
 type AdvisorService struct {
@@ -31,4 +32,8 @@ func (as *AdvisorService) GetAdvisors(verified bool, limit, offset int) (*[]doma
 
 func (as *AdvisorService) AddSchedule(sch *domain.Schedule) error {
 	return as.AdvStore.AddSchedule(sch)
+}
+
+func (as *AdvisorService) GetAvgRating(advisorID int64) (float64, error) {
+	return as.AdvStore.GetAvgRating(advisorID)
 }
