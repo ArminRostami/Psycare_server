@@ -30,8 +30,8 @@ func (us *UserStore) GetUserWithID(id int64) (*domain.User, error) {
 
 func (us *UserStore) AddUser(u *domain.User) error {
 	return us.DB.namedExec(`
-	INSERT INTO users (username, email, password, credit) 
-	VALUES (:username,:email,:password,:credit)`, u)
+	INSERT INTO users (username, email, password) 
+	VALUES (:username, :email, :password)`, u)
 }
 
 // func (us *UserStore) changeDesc(id int64, desc string) error {
