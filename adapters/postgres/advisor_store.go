@@ -14,16 +14,17 @@ type AdvisorStore struct {
 }
 
 func (as *AdvisorStore) CreateAdvisor(advisor *domain.Advisor) error {
-	return as.DB.namedExec(`INSERT into advisors (id, first_name, last_name, description)
-						   VALUES (:id, :first_name, :last_name, :description)`, advisor)
-
+	return as.DB.namedExec(`
+	INSERT into advisors (id, first_name, last_name, description) 
+	VALUES (:id, :first_name, :last_name, :description)`, advisor)
 }
 
 func (as *AdvisorStore) GetAdvisors(verified bool, limit, offset int) (*[]domain.Advisor, error) {
 	advisors := &[]domain.Advisor{}
-	err := as.DB.Con.Select(advisors, `SELECT id, first_name, last_name, description 
-								   FROM advisors WHERE verified=$1 
-								   LIMIT $2 OFFSET $3`, verified, limit, offset)
+	err := as.DB.Con.Select(advisors, `
+	SELECT id, first_name, last_name, description 
+	FROM advisors WHERE verified=$1 
+	LIMIT $2 OFFSET $3`, verified, limit, offset)
 
 	if err != nil && err != sql.ErrNoRows {
 		return nil, errors.Wrap(err, "failed to receive advisors")
@@ -34,8 +35,9 @@ func (as *AdvisorStore) GetAdvisors(verified bool, limit, offset int) (*[]domain
 func (as *AdvisorStore) AddSchedule(sch *domain.Schedule) error {
 	var errs string
 	for _, p := range sch.Periods {
-		err := as.DB.exec(`INSERT INTO schedules (advisor_id, day_of_week, start_time, end_time) VALUES ($1, $2, $3, $4)`,
-			sch.AdvisorID, p.DayOfWeek, getTime(p.StartTime), getTime(p.EndTime))
+		err := as.DB.exec(`
+		INSERT INTO schedules (advisor_id, day_of_week, start_time, end_time) 
+		VALUES ($1, $2, $3, $4)`, sch.AdvisorID, p.DayOfWeek, getTime(p.StartTime), getTime(p.EndTime))
 		if err != nil {
 			fmt.Println(err)
 			errs += fmt.Sprintf("failed to add %v: %v\n", p, err)
@@ -55,7 +57,8 @@ func getTime(src time.Time) string {
 
 func (as *AdvisorStore) GetAvgRating(advisorID int64) (float64, error) {
 	avg := new(float64)
-	err := as.DB.Con.Get(avg, `SELECT AVG(score)
+	err := as.DB.Con.Get(avg, `
+	SELECT AVG(score) 
 	FROM (SELECT id FROM appointments WHERE advisor_id=$1) as aps 
 	INNER JOIN ratings ON aps.id=ratings.appointment_id
 	`, advisorID)
