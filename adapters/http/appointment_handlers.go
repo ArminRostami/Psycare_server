@@ -87,3 +87,29 @@ func (h *Handler) rateAppointment(w http.ResponseWriter, r *http.Request) {
 	renderData(w, r, rating)
 
 }
+
+func (h *Handler) cancelAppointment(w http.ResponseWriter, r *http.Request) {
+	id, httpErr := getIDFromClaims(r)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+
+	req := &struct {
+		AppointmentID int64 `json:"appointment_id" validate:"required"`
+	}{}
+
+	httpErr = h.decodeAndValidate(r, req)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+
+	err := h.CancelAppointment(id, req.AppointmentID)
+	if err != nil {
+		renderError(w, r, &httpError{"cannot cancel appointment", http.StatusInternalServerError, err})
+		return
+	}
+
+	renderData(w, r, "appointment cancelled")
+}

@@ -37,10 +37,13 @@ func bootstrap() error {
 		return errors.Wrap(err, "failed to connect to database")
 	}
 	roleStore := &postgres.RoleStore{DB: pdb}
+	userStore := &postgres.UserStore{DB: pdb}
+	advisorStore := &postgres.AdvisorStore{DB: pdb}
+	apptStore := &postgres.AppointmentStore{DB: pdb}
 
-	uss := &app.UserService{Store: &postgres.UserStore{DB: pdb}}
-	ads := &app.AdvisorService{AdvStore: &postgres.AdvisorStore{DB: pdb}, RoleStore: roleStore}
-	aps := &app.AppointmentService{Store: &postgres.AppointmentStore{DB: pdb}}
+	uss := &app.UserService{Store: userStore}
+	ads := &app.AdvisorService{AdvStore: advisorStore, RoleStore: roleStore}
+	aps := &app.AppointmentService{ApptStore: apptStore, AdvStore: advisorStore, UsrStore: userStore}
 	rls := &app.RoleService{Store: roleStore}
 
 	srv := &app.Services{UserService: uss, AdvisorService: ads, AppointmentService: aps, RoleService: rls}

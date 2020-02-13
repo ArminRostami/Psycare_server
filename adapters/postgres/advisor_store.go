@@ -37,7 +37,7 @@ func (as *AdvisorStore) GetAdvisorWithID(id int64) (*domain.Advisor, error) {
 	err := as.DB.Con.Get(advisor, `
 	SELECT * FROM advisors WHERE id=$1`, id)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get advisor")
+		return nil, errors.Wrap(err, "failed to get advisor info")
 	}
 	return advisor, nil
 }

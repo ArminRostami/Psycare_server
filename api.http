@@ -104,3 +104,12 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 ### 12. Get avg rating for an advisor:
 @adv_id=2
 GET {{api}}/advisors/{{adv_id}}/rating
+
+
+### 13. Cancel appointment
+POST {{api}}/appointments/cancel
+Cookie: {{auth.response.headers.Set-Cookie}}
+
+{
+    "appointment_id":2
+}

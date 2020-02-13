@@ -57,13 +57,14 @@ func (as *AppointmentStore) AddRating(rating *domain.Rating) error {
 	return nil
 }
 
-func (as *AppointmentStore) CalculateCost(appt *domain.Appointment) (int64, error) {
-	hourlyFee := new(int64)
-	err := as.DB.Con.Get(hourlyFee, `
-	SELECT hourly_fee FROM advisors WHERE id=$1`, appt.AdvisorID)
-	if err != nil {
-		return 0, errors.Wrap(err, "cannot get hourly fee for advisor")
-	}
-	dur := appt.EndTime.Sub(appt.StartTime)
-	return int64(dur.Hours() * float64(*hourlyFee)), nil
+func (as *AppointmentStore) GetAppointmentWithID(id int64) (*domain.Appointment, error) {
+	appt := &domain.Appointment{}
+	err := as.DB.Con.Get(appt, `
+		SELECT * FROM appointments WHERE id=$1`, id)
+	return appt, errors.Wrap(err, "failed to get appointment info")
+}
+
+func (as *AppointmentStore) CancelAppointment(id int64) error {
+	return as.DB.exec(`
+	UPDATE appointments SET cancelled=true WHERE id=$1`, id)
 }
