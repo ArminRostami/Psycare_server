@@ -10,7 +10,7 @@ var DefaultSchema = schema{
 
 	CREATE TABLE users (
 		id serial PRIMARY KEY,
-		username varchar (60) NOT NULL,
+		username varchar (60) NOT NULL CONSTRAINT unique_username UNIQUE,
 		email text NOT NULL CONSTRAINT unique_email UNIQUE,
 		password varchar (60) NOT NULL,
 		credit INTEGER DEFAULT 250 NOT NULL 
