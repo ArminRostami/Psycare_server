@@ -10,12 +10,13 @@ import (
 type UserStore interface {
 	GetUserWithName(username string) (*domain.User, error)
 	GetUserWithID(id int64) (*domain.User, error)
-	AddUser(u *domain.User) error
+	CreateUser(u *domain.User) error
 	Pay(senderID, recieverID, credits int64) error
 }
 
 type UserService struct {
-	Store UserStore
+	UserStore
+	RoleStore
 }
 
 func hashPassword(password string) (string, error) {
@@ -26,13 +27,13 @@ func hashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-func (us *UserService) AddUser(u *domain.User) error {
+func (us *UserService) CreateUser(u *domain.User) error {
 	hash, err := hashPassword(u.Password)
 	if err != nil {
 		return err
 	}
 	u.Password = hash
-	err = us.Store.AddUser(u)
+	err = us.UserStore.CreateUser(u)
 	if err != nil {
 		return errors.WithMessage(err, "failed to add user")
 	}
@@ -40,7 +41,7 @@ func (us *UserService) AddUser(u *domain.User) error {
 }
 
 func (us *UserService) AuthUser(username, password string) (*domain.User, error) {
-	u, err := us.Store.GetUserWithName(username)
+	u, err := us.UserStore.GetUserWithName(username)
 	if err != nil {
 		return nil, err
 	}
@@ -53,9 +54,18 @@ func (us *UserService) AuthUser(username, password string) (*domain.User, error)
 }
 
 func (us *UserService) GetUserWithID(id int64) (*domain.User, error) {
-	return us.Store.GetUserWithID(id)
+	return us.UserStore.GetUserWithID(id)
 }
 
 func (us *UserService) Pay(senderID, recieverID, credits int64) error {
-	return us.Store.Pay(senderID, recieverID, credits)
+	user, err := us.GetUserWithID(senderID)
+	if err != nil {
+		return errors.Wrap(err, "cannot pay")
+	}
+
+	if user.Credit < credits {
+		return errors.New("sender does not have enough credit")
+	}
+
+	return us.UserStore.Pay(senderID, recieverID, credits)
 }

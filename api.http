@@ -5,8 +5,8 @@
 POST {{api}}/users
 
 {
-    "username":"user7",
-    "email":"abaas@gmail.com",
+    "username":"user8",
+    "email":"abaaasds@gmail.com",
     "password":"omegalul"
 }
 
@@ -20,7 +20,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 POST {{api}}/users/auth
 
 {
-    "username":"user1",
+    "username":"user8",
     "password":"omegalul"
 }
 
@@ -38,7 +38,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 }
 
 ### 5. Get a single advisor with id:
-@id=2
+@id=11
 GET {{api}}/advisors/{{id}}
 
 ### 6. Get advisors with pagination:
@@ -54,7 +54,7 @@ POST {{api}}/appointments
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "advisor_id":2,
+    "advisor_id":11,
     "start_datetime":"2020-02-16T18:49:53.148Z",
     "end_datetime":"2020-02-16T19:19:53.148Z"
 }
@@ -97,12 +97,12 @@ POST {{api}}/appointments/rate
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "appointment_id":3,
-    "score":7
+    "appointment_id":4,
+    "score":8
 }
 
 ### 12. Get avg rating for an advisor:
-@adv_id=2
+@adv_id=11
 GET {{api}}/advisors/{{adv_id}}/rating
 
 
@@ -111,5 +111,5 @@ POST {{api}}/appointments/cancel
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "appointment_id":2
+    "appointment_id":5
 }

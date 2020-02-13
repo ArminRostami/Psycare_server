@@ -28,24 +28,13 @@ func (us *UserStore) GetUserWithID(id int64) (*domain.User, error) {
 	return u, nil
 }
 
-func (us *UserStore) AddUser(u *domain.User) error {
+func (us *UserStore) CreateUser(u *domain.User) error {
 	return us.DB.namedExec(`
 	INSERT INTO users (username, email, password) 
 	VALUES (:username, :email, :password)`, u)
 }
 
 func (us *UserStore) Pay(senderID, recieverID, credits int64) error {
-	senderCredits := new(int64)
-	err := us.DB.Con.Get(senderCredits, `
-	SELECT credit FROM users WHERE id=$1`, senderID)
-	if err != nil {
-		return errors.Wrap(err, "cannot get sender credits")
-	}
-
-	if *senderCredits < credits {
-		return errors.New("sender does not have enough credit")
-	}
-
 	return us.DB.exec(`
 	UPDATE users AS u SET
 	credit = u.credit + u2.credit

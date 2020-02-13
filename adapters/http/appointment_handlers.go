@@ -19,21 +19,8 @@ func (h *Handler) bookAppointment(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, httpErr)
 		return
 	}
-	// TODO: assert that appointment can be booked
 
-	cost, err := h.CalculateCost(appt)
-	if err != nil {
-		renderError(w, r, &httpError{"cannot calculate cost for appointment", http.StatusInternalServerError, err})
-		return
-	}
-
-	err = h.Pay(appt.UserID, appt.AdvisorID, cost)
-	if err != nil {
-		renderError(w, r, &httpError{"payment failed", http.StatusInternalServerError, err})
-		return
-	}
-
-	err = h.CreateAppointment(appt)
+	err := h.CreateAppointment(appt)
 	if err != nil {
 		renderError(w, r, &httpError{"failed to add appointment", http.StatusInternalServerError, err})
 		return

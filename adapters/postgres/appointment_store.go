@@ -42,7 +42,7 @@ func (as *AppointmentStore) AddRating(rating *domain.Rating) error {
 	if err != nil {
 		return errors.Wrap(err, "cannot get appointment: it does not exist or does not belong to this user")
 	}
-
+	// TODO: this should be before:
 	if time.Now().After(appt.EndTime) {
 		return errors.New("cannot rate appoinment before it's over")
 	}

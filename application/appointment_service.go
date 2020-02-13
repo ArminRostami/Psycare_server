@@ -18,34 +18,48 @@ type AppointmentStore interface {
 }
 
 type AppointmentService struct {
-	ApptStore AppointmentStore
-	AdvStore  AdvisorStore
-	UsrStore  UserStore
+	AppointmentStore
+	AdvisorStore
+	UserStore
 }
 
 func (as *AppointmentService) CreateAppointment(appt *domain.Appointment) error {
-	return as.ApptStore.CreateAppointment(appt)
+	if appt.UserID == appt.AdvisorID {
+		return errors.New("you cannot book an appointment with yourself")
+	}
+	// TODO: assert that appointment can be booked
+
+	cost, err := as.CalculateCost(appt)
+	if err != nil {
+		return err
+	}
+	err = as.UserStore.Pay(appt.UserID, appt.AdvisorID, cost)
+	if err != nil {
+		return err
+	}
+
+	return as.AppointmentStore.CreateAppointment(appt)
 }
 
 func (as *AppointmentService) GetAppointments(id int64, forUser bool) (*[]domain.Appointment, error) {
-	return as.ApptStore.GetAppointments(id, forUser)
+	return as.AppointmentStore.GetAppointments(id, forUser)
 }
 
 func (as *AppointmentService) AddRating(rating *domain.Rating) error {
-	return as.ApptStore.AddRating(rating)
+	return as.AppointmentStore.AddRating(rating)
 }
 
 func (as *AppointmentService) CalculateCost(appt *domain.Appointment) (int64, error) {
-	adv, err := as.AdvStore.GetAdvisorWithID(appt.AdvisorID)
+	adv, err := as.AdvisorStore.GetAdvisorWithID(appt.AdvisorID)
 	if err != nil {
-		return 0, errors.Wrap(err, "cannot get advisor info for this appointment")
+		return 0, errors.Wrap(err, "failed to calculate cost: cannot get advisor info for this appointment")
 	}
 	dur := appt.EndTime.Sub(appt.StartTime)
 	return int64(dur.Hours() * float64(adv.HourlyFee)), nil
 }
 
 func (as *AppointmentService) CancelAppointment(uid, appointmentID int64) error {
-	appt, err := as.ApptStore.GetAppointmentWithID(appointmentID)
+	appt, err := as.AppointmentStore.GetAppointmentWithID(appointmentID)
 	if err != nil {
 		return err
 	}
@@ -68,10 +82,10 @@ func (as *AppointmentService) CancelAppointment(uid, appointmentID int64) error 
 	}
 
 	refundValue := int64(float64(cost) * (1 - CANCELLATION_PENALTY))
-	err = as.UsrStore.Pay(appt.AdvisorID, uid, refundValue)
+	err = as.UserStore.Pay(appt.AdvisorID, uid, refundValue)
 	if err != nil {
 		return err
 	}
 
-	return as.ApptStore.CancelAppointment(appointmentID)
+	return as.AppointmentStore.CancelAppointment(appointmentID)
 }

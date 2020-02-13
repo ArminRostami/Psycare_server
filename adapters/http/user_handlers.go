@@ -14,7 +14,7 @@ func (h *Handler) createUser(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, httpErr)
 		return
 	}
-	err := h.AddUser(user)
+	err := h.CreateUser(user)
 	if err != nil {
 		renderError(w, r, &httpError{"user registration error", http.StatusInternalServerError, err})
 		return
