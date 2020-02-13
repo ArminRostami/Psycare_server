@@ -53,10 +53,6 @@ func (us *UserService) AuthUser(username, password string) (*domain.User, error)
 	return u, nil
 }
 
-func (us *UserService) Pay(senderID, recieverID, credits int64) error {
-	return us.UserStore.Pay(senderID, recieverID, credits)
-}
-
 func (us *UserService) GetUserWithID(id int64) (*domain.User, error) {
 	return us.UserStore.GetUserWithID(id)
 }

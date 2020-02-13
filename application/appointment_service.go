@@ -51,7 +51,7 @@ func (as *AppointmentService) CreateAppointment(appt *domain.Appointment) error 
 		return errors.Wrap(err, "failed to create appointment")
 	}
 
-	err = as.UserStore.Pay(appt.UserID, appt.AdvisorID, cost)
+	err = as.Pay(appt.UserID, appt.AdvisorID, cost)
 	if err != nil {
 		return errors.Wrap(err, "failed to create appointment")
 	}
@@ -113,7 +113,7 @@ func (as *AppointmentService) CancelAppointment(uid, appointmentID int64) error 
 	}
 
 	refundValue := int64(float64(cost) * (1 - CANCELLATION_PENALTY))
-	err = as.UserStore.Pay(appt.AdvisorID, uid, refundValue)
+	err = as.Pay(appt.AdvisorID, uid, refundValue)
 	if err != nil {
 		return errors.Wrap(err, "failed to cancel appointment: refund failed")
 	}
@@ -123,6 +123,10 @@ func (as *AppointmentService) CancelAppointment(uid, appointmentID int64) error 
 
 func (as *AppointmentService) GetAppointments(id int64, forUser bool) (*[]domain.Appointment, error) {
 	return as.AppointmentStore.GetAppointments(id, forUser)
+}
+
+func (as *AppointmentService) Pay(senderID, recieverID, credits int64) error {
+	return as.UserStore.Pay(senderID, recieverID, credits)
 }
 
 func (as *AppointmentService) checkWithAppointments(appt *domain.Appointment, id int64, forUser bool) error {
