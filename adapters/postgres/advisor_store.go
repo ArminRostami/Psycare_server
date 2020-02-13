@@ -32,6 +32,16 @@ func (as *AdvisorStore) GetAdvisors(verified bool, limit, offset int) (*[]domain
 	return advisors, nil
 }
 
+func (as *AdvisorStore) GetAdvisorWithID(id int64) (*domain.Advisor, error) {
+	advisor := &domain.Advisor{}
+	err := as.DB.Con.Get(advisor, `
+	SELECT * FROM advisors WHERE id=$1`, id)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get advisor")
+	}
+	return advisor, nil
+}
+
 func (as *AdvisorStore) AddSchedule(sch *domain.Schedule) error {
 	var errs string
 	for _, p := range sch.Periods {

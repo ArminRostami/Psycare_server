@@ -100,3 +100,19 @@ func (h *Handler) getAvgRating(w http.ResponseWriter, r *http.Request) {
 	}
 	renderData(w, r, rating)
 }
+
+func (h *Handler) getAdvisor(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "adv_id")
+	id64, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to get id from url", http.StatusBadRequest, err})
+		return
+	}
+
+	adv, err := h.GetAdvisorWithID(id64)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to get advisor from service", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, adv)
+}

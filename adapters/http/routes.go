@@ -19,6 +19,7 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/users", h.createUser)
 			r.Post("/users/auth", h.login)
 			r.Get("/advisors", h.getAdvisors)
+			r.Get("/advisors/{adv_id}", h.getAdvisor)
 			r.Get("/advisors/{adv_id}/rating", h.getAvgRating)
 
 		})

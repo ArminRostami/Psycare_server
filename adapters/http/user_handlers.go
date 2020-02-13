@@ -19,7 +19,8 @@ func (h *Handler) createUser(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, &httpError{"user registration error", http.StatusInternalServerError, err})
 		return
 	}
-	renderData(w, r, "user registered")
+	user.Password = ""
+	renderData(w, r, user)
 }
 
 func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
