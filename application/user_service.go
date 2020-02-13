@@ -11,6 +11,7 @@ type UserStore interface {
 	GetUserWithName(username string) (*domain.User, error)
 	GetUserWithID(id int64) (*domain.User, error)
 	AddUser(u *domain.User) error
+	Pay(senderID, recieverID, credits int64) error
 }
 
 type UserService struct {
@@ -53,4 +54,8 @@ func (us *UserService) AuthUser(username, password string) (*domain.User, error)
 
 func (us *UserService) GetUserWithID(id int64) (*domain.User, error) {
 	return us.Store.GetUserWithID(id)
+}
+
+func (us *UserService) Pay(senderID, recieverID, credits int64) error {
+	return us.Store.Pay(senderID, recieverID, credits)
 }

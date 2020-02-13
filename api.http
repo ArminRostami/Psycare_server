@@ -6,7 +6,7 @@ POST {{api}}/users
 
 {
     "username":"user2",
-    "email":"abceesadfs@gmail.com",
+    "email":"abceedfs@gmail.com",
     "password":"omegalul"
 }
 
@@ -20,7 +20,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 POST {{api}}/users/auth
 
 {
-    "username":"user2",
+    "username":"user1",
     "password":"omegalul"
 }
 
@@ -50,9 +50,9 @@ POST {{api}}/appointments
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "advisor_id":1,
+    "advisor_id":2,
     "start_datetime":"2020-02-16T18:49:53.148Z",
-    "end_datetime":"2020-02-16T19:49:53.148Z"
+    "end_datetime":"2020-02-16T19:19:53.148Z"
 }
 
 ### Add schedule for advisors:

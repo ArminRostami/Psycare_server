@@ -5,7 +5,7 @@ import (
 	"psycare/domain"
 )
 
-func (h *Handler) makeAppointment(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) bookAppointment(w http.ResponseWriter, r *http.Request) {
 	id, httpErr := getIDFromClaims(r)
 	if httpErr != nil {
 		renderError(w, r, httpErr)
@@ -13,18 +13,32 @@ func (h *Handler) makeAppointment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	appt := &domain.Appointment{}
+	appt.UserID = id
 	httpErr = h.decodeAndValidate(r, appt)
 	if httpErr != nil {
 		renderError(w, r, httpErr)
 		return
 	}
-	appt.UserID = id
-	err := h.CreateAppointment(appt)
+	// TODO: assert that appointment can be booked
+
+	cost, err := h.CalculateCost(appt)
+	if err != nil {
+		renderError(w, r, &httpError{"cannot calculate cost for appointment", http.StatusInternalServerError, err})
+		return
+	}
+
+	err = h.Pay(appt.UserID, appt.AdvisorID, cost)
+	if err != nil {
+		renderError(w, r, &httpError{"payment failed", http.StatusInternalServerError, err})
+		return
+	}
+
+	err = h.CreateAppointment(appt)
 	if err != nil {
 		renderError(w, r, &httpError{"failed to add appointment", http.StatusInternalServerError, err})
 		return
 	}
-	renderData(w, r, "appointment added")
+	renderData(w, r, appt)
 }
 
 func (h *Handler) appointmentsHandler(w http.ResponseWriter, r *http.Request, forUser bool) {

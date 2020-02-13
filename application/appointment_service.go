@@ -6,6 +6,7 @@ type AppointmentStore interface {
 	CreateAppointment(appt *domain.Appointment) error
 	GetAppointments(id int64, forUser bool) (*[]domain.Appointment, error)
 	AddRating(rating *domain.Rating) error
+	CalculateCost(appt *domain.Appointment) (int64, error)
 }
 
 type AppointmentService struct {
@@ -22,4 +23,8 @@ func (as *AppointmentService) GetAppointments(id int64, forUser bool) (*[]domain
 
 func (as *AppointmentService) AddRating(rating *domain.Rating) error {
 	return as.Store.AddRating(rating)
+}
+
+func (as *AppointmentService) CalculateCost(appt *domain.Appointment) (int64, error) {
+	return as.Store.CalculateCost(appt)
 }
