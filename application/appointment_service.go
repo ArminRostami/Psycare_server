@@ -27,12 +27,30 @@ func (as *AppointmentService) CreateAppointment(appt *domain.Appointment) error 
 	if appt.UserID == appt.AdvisorID {
 		return errors.New("failed to create appointment: you cannot book an appointment with yourself")
 	}
-	// TODO: assert that appointment can be booked
+
+	// check with advisor schedule:
+	err := as.checkWithSchedule(appt)
+	if err != nil {
+		return errors.Wrap(err, "failed to create appointment")
+	}
+
+	// check with advisor appointments:
+	err = as.checkWithAppointments(appt, appt.AdvisorID, false)
+	if err != nil {
+		return errors.Wrap(err, "failed to create appointment")
+	}
+
+	// check with user appointments:
+	err = as.checkWithAppointments(appt, appt.UserID, true)
+	if err != nil {
+		return errors.Wrap(err, "failed to create appointment")
+	}
 
 	cost, err := as.CalculateCost(appt)
 	if err != nil {
 		return errors.Wrap(err, "failed to create appointment")
 	}
+
 	err = as.UserStore.Pay(appt.UserID, appt.AdvisorID, cost)
 	if err != nil {
 		return errors.Wrap(err, "failed to create appointment")
@@ -105,4 +123,55 @@ func (as *AppointmentService) CancelAppointment(uid, appointmentID int64) error 
 
 func (as *AppointmentService) GetAppointments(id int64, forUser bool) (*[]domain.Appointment, error) {
 	return as.AppointmentStore.GetAppointments(id, forUser)
+}
+
+func (as *AppointmentService) checkWithAppointments(appt *domain.Appointment, id int64, forUser bool) error {
+	var target string
+	if forUser {
+		target = "user"
+	} else {
+		target = "advisor"
+	}
+
+	bookedAppts, err := as.AppointmentStore.GetAppointments(id, forUser)
+	if err != nil {
+		return errors.Wrap(err, "failed to check with other appointments")
+	}
+
+	for _, ref := range *bookedAppts {
+		conflict := !(appt.EndTime.Before(ref.StartTime) || appt.StartTime.After(ref.EndTime))
+		if conflict {
+			return errors.Errorf("appointment is incompatible with other %s appointments", target)
+		}
+	}
+	return nil
+}
+
+func (as *AppointmentService) checkWithSchedule(appt *domain.Appointment) error {
+	sch, err := as.AdvisorStore.GetSchedule(appt.AdvisorID)
+	if err != nil {
+		return errors.Wrap(err, "failed to get schedule")
+	}
+
+	for _, period := range sch.Periods {
+		if *period.DayOfWeek == int(appt.StartTime.Weekday()) &&
+			after(appt.StartTime, period.StartTime) &&
+			after(period.EndTime, appt.EndTime) {
+			return nil
+		}
+	}
+	return errors.New("appointment is incompatible with schedule")
+}
+
+func after(a, b time.Time) bool {
+	if a.Hour() != b.Hour() {
+		return a.Hour() > b.Hour()
+	}
+	if a.Minute() != b.Minute() {
+		return a.Minute() > b.Minute()
+	}
+	if a.Second() != b.Second() {
+		return a.Second() > b.Second()
+	}
+	return false
 }

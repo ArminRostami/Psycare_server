@@ -5,8 +5,8 @@
 POST {{api}}/users
 
 {
-    "username":"user2",
-    "email":"abaasdss@gmail.com",
+    "username":"user4",
+    "email":"abaasddss@gmail.com",
     "password":"omegalul"
 }
 
@@ -54,9 +54,9 @@ POST {{api}}/appointments
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "advisor_id":1,
-    "start_datetime":"2020-02-16T18:49:53.148Z",
-    "end_datetime":"2020-02-16T20:49:53.148Z"
+    "advisor_id":7,
+    "start_datetime":"2020-02-16T13:38:53.148Z",
+    "end_datetime":"2020-02-16T14:05:53.148Z"
 }
 
 ### 8. Add schedule for advisors:
@@ -68,12 +68,12 @@ Cookie: {{auth.response.headers.Set-Cookie}}
     "periods":
         [
             {
-                "day_of_week":4,
-                "start_time":"2020-02-14T12:04:47+03:30",
-                "end_time":"2020-02-14T12:34:47+03:30"
+                "day_of_week": 0,
+                "start_time":"2020-02-11T12:04:47+03:30",
+                "end_time":"2020-02-11T14:34:47+03:30"
             },
             {
-                "day_of_week":6,
+                "day_of_week": 6,
                 "start_time":"2020-02-15T12:04:47+03:30",
                 "end_time":"2020-02-15T12:34:47+03:30"
             }

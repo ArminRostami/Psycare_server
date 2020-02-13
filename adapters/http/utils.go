@@ -53,12 +53,11 @@ func getID(claims jwt.MapClaims) (int64, error) {
 func (h *Handler) decodeAndValidate(r *http.Request, dst interface{}) *httpError {
 	err := render.DecodeJSON(r.Body, dst)
 	if err != nil {
-		err = errors.Wrap(err, "request decoding error")
-		return &httpError{status: http.StatusBadRequest, errType: "request decoding error", err: err}
+		return &httpError{status: http.StatusBadRequest, errType: "request decoding error", err: errors.WithStack(err)}
 	}
 	err = h.Validate.Struct(dst)
 	if err != nil {
-		return &httpError{status: http.StatusBadRequest, errType: "request validation error", err: err}
+		return &httpError{status: http.StatusBadRequest, errType: "request validation error", err: errors.WithStack(err)}
 	}
 	return nil
 }
