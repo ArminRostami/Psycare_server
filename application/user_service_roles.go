@@ -1,5 +1,7 @@
 package app
 
+import "github.com/pkg/errors"
+
 const (
 	ROLE_ADMIN   = "admin"
 	ROLE_ADVISOR = "advisor"
@@ -21,7 +23,7 @@ func (us *UserService) AddRole(id int64, role string) error {
 func (us *UserService) HasRole(id int64, roleName string) (bool, error) {
 	roles, err := us.RoleStore.GetRoles(id)
 	if err != nil {
-		return false, err
+		return false, errors.Wrap(err, "failed to check for role")
 	}
 	for _, role := range *roles {
 		if role == roleName {

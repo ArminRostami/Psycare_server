@@ -14,9 +14,10 @@ type AdvisorStore struct {
 }
 
 func (as *AdvisorStore) CreateAdvisor(advisor *domain.Advisor) error {
-	return as.DB.namedExec(`
+	err := as.DB.namedExec(`
 	INSERT into advisors (id, first_name, last_name, description) 
 	VALUES (:id, :first_name, :last_name, :description)`, advisor)
+	return errors.Wrap(err, "failed to create advisor")
 }
 
 func (as *AdvisorStore) GetAdvisors(verified bool, limit, offset int) (*[]domain.Advisor, error) {
@@ -36,10 +37,7 @@ func (as *AdvisorStore) GetAdvisorWithID(id int64) (*domain.Advisor, error) {
 	advisor := &domain.Advisor{}
 	err := as.DB.Con.Get(advisor, `
 	SELECT * FROM advisors WHERE id=$1`, id)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get advisor info")
-	}
-	return advisor, nil
+	return advisor, errors.Wrap(err, "failed to get advisor info")
 }
 
 func (as *AdvisorStore) AddSchedule(sch *domain.Schedule) error {
@@ -72,8 +70,5 @@ func (as *AdvisorStore) GetAvgRating(advisorID int64) (float64, error) {
 	FROM (SELECT id FROM appointments WHERE advisor_id=$1) as aps 
 	INNER JOIN ratings ON aps.id=ratings.appointment_id
 	`, advisorID)
-	if err != nil {
-		return 0, errors.Wrap(err, "could not get average rating")
-	}
-	return *avg, nil
+	return *avg, errors.Wrap(err, "failed to get average rating")
 }

@@ -1,6 +1,10 @@
 package app
 
-import "psycare/domain"
+import (
+	"psycare/domain"
+
+	"github.com/pkg/errors"
+)
 
 type AdvisorStore interface {
 	CreateAdvisor(advisor *domain.Advisor) error
@@ -22,7 +26,7 @@ func (as *AdvisorService) CreateAdvisor(advisor *domain.Advisor) error {
 	}
 	err = as.RoleStore.AddRole(advisor.ID, ROLE_ADVISOR)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "advisor created")
 	}
 	return nil
 }

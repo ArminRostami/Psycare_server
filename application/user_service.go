@@ -53,19 +53,19 @@ func (us *UserService) AuthUser(username, password string) (*domain.User, error)
 	return u, nil
 }
 
-func (us *UserService) GetUserWithID(id int64) (*domain.User, error) {
-	return us.UserStore.GetUserWithID(id)
-}
-
 func (us *UserService) Pay(senderID, recieverID, credits int64) error {
 	user, err := us.GetUserWithID(senderID)
 	if err != nil {
-		return errors.Wrap(err, "cannot pay")
+		return errors.Wrap(err, "payment failed")
 	}
 
 	if user.Credit < credits {
-		return errors.New("sender does not have enough credit")
+		return errors.New("payment failed: sender does not have enough credit")
 	}
 
 	return us.UserStore.Pay(senderID, recieverID, credits)
+}
+
+func (us *UserService) GetUserWithID(id int64) (*domain.User, error) {
+	return us.UserStore.GetUserWithID(id)
 }
