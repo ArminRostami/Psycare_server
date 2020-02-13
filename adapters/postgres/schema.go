@@ -13,7 +13,7 @@ var DefaultSchema = schema{
 		username varchar (60) NOT NULL CONSTRAINT unique_username UNIQUE,
 		email text NOT NULL CONSTRAINT unique_email UNIQUE,
 		password varchar (60) NOT NULL,
-		credit INTEGER DEFAULT 250 NOT NULL 
+		credit INTEGER DEFAULT 250 NOT NULL CONSTRAINT positive_credit CHECK (credit >= 0)
 	);
 	
 	CREATE TABLE advisors (

@@ -5,8 +5,8 @@
 POST {{api}}/users
 
 {
-    "username":"user1",
-    "email":"abaaasds@gmail.com",
+    "username":"user2",
+    "email":"abaasds@gmail.com",
     "password":"omegalul"
 }
 
@@ -54,9 +54,9 @@ POST {{api}}/appointments
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "advisor_id":11,
+    "advisor_id":1,
     "start_datetime":"2020-02-16T18:49:53.148Z",
-    "end_datetime":"2020-02-16T19:19:53.148Z"
+    "end_datetime":"2020-02-16T20:49:53.148Z"
 }
 
 ### 8. Add schedule for advisors:

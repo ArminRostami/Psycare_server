@@ -54,15 +54,6 @@ func (us *UserService) AuthUser(username, password string) (*domain.User, error)
 }
 
 func (us *UserService) Pay(senderID, recieverID, credits int64) error {
-	user, err := us.GetUserWithID(senderID)
-	if err != nil {
-		return errors.Wrap(err, "payment failed")
-	}
-
-	if user.Credit < credits {
-		return errors.New("payment failed: sender does not have enough credit")
-	}
-
 	return us.UserStore.Pay(senderID, recieverID, credits)
 }
 
