@@ -116,3 +116,19 @@ func (h *Handler) getAdvisor(w http.ResponseWriter, r *http.Request) {
 	}
 	renderData(w, r, adv)
 }
+
+func (h *Handler) getSchedule(w http.ResponseWriter, r *http.Request) {
+	id, httpErr := getIDFromClaims(r)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+
+	sch, err := h.GetSchedule(id)
+	if err != nil {
+		renderError(w, r, &httpError{"could not get schedule", http.StatusInternalServerError, err})
+		return
+	}
+
+	renderData(w, r, sch)
+}

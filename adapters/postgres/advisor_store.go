@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"psycare/domain"
-	"time"
 
 	"github.com/pkg/errors"
 )
@@ -45,7 +44,7 @@ func (as *AdvisorStore) AddSchedule(sch *domain.Schedule) error {
 	for _, p := range sch.Periods {
 		err := as.DB.exec(`
 		INSERT INTO schedules (advisor_id, day_of_week, start_time, end_time) 
-		VALUES ($1, $2, $3, $4)`, sch.AdvisorID, p.DayOfWeek, getTime(p.StartTime), getTime(p.EndTime))
+		VALUES ($1, $2, $3, $4)`, sch.AdvisorID, p.DayOfWeek, p.StartTime, p.EndTime)
 		if err != nil {
 			fmt.Println(err)
 			errs += fmt.Sprintf("failed to add %v: %v\n", p, err)
@@ -57,10 +56,11 @@ func (as *AdvisorStore) AddSchedule(sch *domain.Schedule) error {
 	return nil
 }
 
-func getTime(src time.Time) string {
-	h, m, s := src.Clock()
-	zone, _ := src.Zone()
-	return fmt.Sprintf("%d:%d:%d%s", h, m, s, zone)
+func (as *AdvisorStore) GetSchedule(id int64) (*domain.Schedule, error) {
+	periods := &[]domain.Period{}
+	err := as.DB.Con.Select(periods, `
+	SELECT day_of_week, start_time, end_time FROM schedules WHERE advisor_id=$1 `, id)
+	return &domain.Schedule{AdvisorID: id, Periods: *periods}, errors.Wrap(err, "failed to get schedule")
 }
 
 func (as *AdvisorStore) GetAvgRating(advisorID int64) (float64, error) {

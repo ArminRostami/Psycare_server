@@ -5,7 +5,7 @@
 POST {{api}}/users
 
 {
-    "username":"user8",
+    "username":"user1",
     "email":"abaaasds@gmail.com",
     "password":"omegalul"
 }
@@ -20,7 +20,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 POST {{api}}/users/auth
 
 {
-    "username":"user8",
+    "username":"user1",
     "password":"omegalul"
 }
 
@@ -113,3 +113,8 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 {
     "appointment_id":5
 }
+
+
+### 14. Get Schedule for an advisor
+GET {{api}}/advisors/schedule
+Cookie: {{auth.response.headers.Set-Cookie}}

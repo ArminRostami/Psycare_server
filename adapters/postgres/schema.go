@@ -49,8 +49,8 @@ var DefaultSchema = schema{
 	CREATE TABLE schedules (
 		advisor_id integer NOT NULL REFERENCES advisors(id) ON DELETE CASCADE,
 		day_of_week smallint NOT NULL,
-		start_time time with time zone NOT NULL,
-		end_time time with time zone NOT NULL,
+		start_time timestamptz NOT NULL,
+		end_time timestamptz NOT NULL,
 		CHECK (day_of_week >= 0 AND day_of_week <= 6),
 		UNIQUE (advisor_id, day_of_week, start_time, end_time)
 	);

@@ -30,6 +30,7 @@ func (h *Handler) SetupRoutes() {
 			r.Get("/users", h.getUser)
 			r.Post("/advisors", h.createAdvisor)
 			r.Post("/advisors/schedule", h.addSchedule)
+			r.Get("/advisors/schedule", h.getSchedule)
 			r.Post("/appointments", h.bookAppointment)
 			r.Get("/appointments/user", h.getUserAppointments)
 			r.Get("/appointments/advisor", h.getAdvisorAppointments)
