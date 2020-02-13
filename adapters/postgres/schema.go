@@ -22,7 +22,7 @@ var DefaultSchema = schema{
 		last_name varchar (45) NOT NULL,
 		description text NOT NULL,
 		verified boolean NOT NULL DEFAULT TRUE,
-		hourly_fee INTEGER NOT NULL DEFAULT 30,
+		hourly_fee INTEGER NOT NULL DEFAULT 60 CONSTRAINT positive_fee CHECK (hourly_fee >= 0), 
 		PRIMARY KEY (id)
 	);
 	
@@ -56,10 +56,10 @@ var DefaultSchema = schema{
 	);
 	
 	CREATE TABLE ratings (
-		user_id integer NOT NULL REFERENCES users(id),
 		appointment_id integer NOT NULL REFERENCES appointments(id),
+		user_id integer NOT NULL REFERENCES users(id),
 		score integer NOT NULL,
-		CONSTRAINT can_rate_once UNIQUE (user_id, appointment_id),
+		PRIMARY KEY(appointment_id),
 		CHECK (score >=0 AND score <= 10)
 	);
 

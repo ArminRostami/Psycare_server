@@ -6,7 +6,7 @@ POST {{api}}/users
 
 {
     "username":"user2",
-    "email":"abaasds@gmail.com",
+    "email":"abaasdss@gmail.com",
     "password":"omegalul"
 }
 
@@ -20,7 +20,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 POST {{api}}/users/auth
 
 {
-    "username":"user1",
+    "username":"user2",
     "password":"omegalul"
 }
 
@@ -97,7 +97,7 @@ POST {{api}}/appointments/rate
 Cookie: {{auth.response.headers.Set-Cookie}}
 
 {
-    "appointment_id":4,
+    "appointment_id":1,
     "score":8
 }
 
