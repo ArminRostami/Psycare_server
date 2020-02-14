@@ -43,5 +43,6 @@ func (h *Handler) setupFileServer(path, dirName string) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to setup routes")
 	}
+
 	return nil
 }
