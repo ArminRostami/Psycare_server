@@ -8,7 +8,6 @@ import (
 )
 
 func (h *Handler) SetupRoutes() {
-	h.Router = chi.NewRouter()
 	h.Router.Use(middleware.Logger)
 	h.Router.Use(middleware.Recoverer)
 	h.Router.Use(render.SetContentType(render.ContentTypeJSON))
@@ -38,4 +37,5 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/appointments/cancel", h.cancelAppointment)
 		})
 	})
+
 }

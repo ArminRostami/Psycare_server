@@ -81,7 +81,7 @@ func getValidator() *validator.Validate {
 }
 
 func getEnvMap(keys []string) (map[string]string, error) {
-	env, err := godotenv.Read("../../.env")
+	env, err := godotenv.Read(".env")
 	if err != nil {
 		return nil, errors.Wrap(err, "could not read env file")
 	}
