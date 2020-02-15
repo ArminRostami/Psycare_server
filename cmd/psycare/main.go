@@ -37,10 +37,7 @@ func bootstrap() error {
 		return errors.Wrap(err, "failed to bootstrap application")
 	}
 
-	err = pdb.Execute(postgres.DefaultSchema.Create)
-	if err != nil {
-		return errors.Wrap(err, "failed to bootstrap application")
-	}
+	_ = pdb.Execute(postgres.DefaultSchema.Create)
 
 	roleStore := &postgres.RoleStore{DB: pdb}
 	userStore := &postgres.UserStore{DB: pdb}
