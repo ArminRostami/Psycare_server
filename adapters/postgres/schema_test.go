@@ -16,13 +16,13 @@ func TestCreateSchema(t *testing.T) {
 	assert := assert.New(t)
 	db, err := sqlx.Connect(pgDriver, connStr)
 	assert.NoError(err)
-	_, err = db.Exec(DefaultSchema.create)
+	_, err = db.Exec(DefaultSchema.Create)
 	assert.NoError(err)
 }
 func TestDropSchema(t *testing.T) {
 	assert := assert.New(t)
 	db, err := sqlx.Connect(pgDriver, connStr)
 	assert.NoError(err)
-	_, err = db.Exec(DefaultSchema.drop)
+	_, err = db.Exec(DefaultSchema.Drop)
 	assert.NoError(err)
 }

@@ -18,7 +18,7 @@ func (r *RoleStore) GetRoles(id int64) (*[]string, error) {
 }
 
 func (r *RoleStore) AddRole(id int64, role string) error {
-	err := r.DB.exec(`
+	err := r.DB.Execute(`
 	INSERT INTO user_roles (user_id, role_id) 
 	VALUES ($1, (SELECT id FROM roles WHERE name=$2))`, id, role)
 	return errors.Wrap(err, "failed to add role")

@@ -23,14 +23,14 @@ func (us *UserStore) GetUserWithID(id int64) (*domain.User, error) {
 }
 
 func (us *UserStore) CreateUser(u *domain.User) error {
-	err := us.DB.namedExec(`
+	err := us.DB.NamedExecute(`
 	INSERT INTO users (username, email, password) 
 	VALUES (:username, :email, :password)`, u)
 	return errors.Wrap(err, "failed to create user")
 }
 
 func (us *UserStore) Pay(senderID, recieverID, credits int64) error {
-	err := us.DB.exec(`
+	err := us.DB.Execute(`
 	UPDATE users AS u SET
 	credit = u.credit + u2.credit
 	FROM (VALUES ($1::integer, -1*$3),($2::integer, $3)) as u2(id, credit)

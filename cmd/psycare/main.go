@@ -34,8 +34,14 @@ func bootstrap() error {
 
 	pdb, err := postgres.Connect(getConnString(env))
 	if err != nil {
-		return errors.Wrap(err, "failed to connect to database")
+		return errors.Wrap(err, "failed to bootstrap application")
 	}
+
+	err = pdb.Execute(postgres.DefaultSchema.Create)
+	if err != nil {
+		return errors.Wrap(err, "failed to bootstrap application")
+	}
+
 	roleStore := &postgres.RoleStore{DB: pdb}
 	userStore := &postgres.UserStore{DB: pdb}
 	advisorStore := &postgres.AdvisorStore{DB: pdb}

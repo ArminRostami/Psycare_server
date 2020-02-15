@@ -12,7 +12,7 @@ type AppointmentStore struct {
 }
 
 func (as *AppointmentStore) CreateAppointment(appt *domain.Appointment) error {
-	err := as.DB.namedExec(`
+	err := as.DB.NamedExecute(`
 	INSERT INTO appointments (user_id, advisor_id, start_datetime, end_datetime) 
 	VALUES (:user_id, :advisor_id, :start_datetime, :end_datetime)`, appt)
 	return errors.Wrap(err, "failed to create appointment")
@@ -32,7 +32,7 @@ func (as *AppointmentStore) GetAppointments(id int64, forUser bool) (*[]domain.A
 }
 
 func (as *AppointmentStore) AddRating(rating *domain.Rating) error {
-	err := as.DB.namedExec(`
+	err := as.DB.NamedExecute(`
 	INSERT INTO ratings(user_id, appointment_id, score) 
 	VALUES (:user_id, :appointment_id, :score)`, rating)
 	return errors.Wrap(err, "failed to add rating")
@@ -46,7 +46,7 @@ func (as *AppointmentStore) GetAppointmentWithID(id int64) (*domain.Appointment,
 }
 
 func (as *AppointmentStore) CancelAppointment(id int64) error {
-	err := as.DB.exec(`
+	err := as.DB.Execute(`
 	UPDATE appointments SET cancelled=true WHERE id=$1`, id)
 	return errors.Wrap(err, "failed to cancel appointment")
 }

@@ -20,7 +20,7 @@ func Connect(connStr string) (*PDB, error) {
 	return &PDB{Con: db}, nil
 }
 
-func (pdb *PDB) exec(query string, args ...interface{}) error {
+func (pdb *PDB) Execute(query string, args ...interface{}) error {
 	tx, err := pdb.Con.Beginx()
 	if err != nil {
 		return errors.Wrap(err, "could not initialize db transaction")
@@ -37,7 +37,7 @@ func (pdb *PDB) exec(query string, args ...interface{}) error {
 	return nil
 }
 
-func (pdb *PDB) namedExec(query string, arg interface{}) error {
+func (pdb *PDB) NamedExecute(query string, arg interface{}) error {
 	tx, err := pdb.Con.Beginx()
 	if err != nil {
 		return errors.Wrap(err, "could not initialize db transaction")

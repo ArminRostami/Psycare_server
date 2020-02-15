@@ -13,7 +13,7 @@ type AdvisorStore struct {
 }
 
 func (as *AdvisorStore) CreateAdvisor(advisor *domain.Advisor) error {
-	err := as.DB.namedExec(`
+	err := as.DB.NamedExecute(`
 	INSERT into advisors (id, first_name, last_name, description) 
 	VALUES (:id, :first_name, :last_name, :description)`, advisor)
 	return errors.Wrap(err, "failed to create advisor")
@@ -42,7 +42,7 @@ func (as *AdvisorStore) GetAdvisorWithID(id int64) (*domain.Advisor, error) {
 func (as *AdvisorStore) AddSchedule(sch *domain.Schedule) error {
 	var errs string
 	for _, p := range sch.Periods {
-		err := as.DB.exec(`
+		err := as.DB.Execute(`
 		INSERT INTO schedules (advisor_id, day_of_week, start_time, end_time) 
 		VALUES ($1, $2, $3, $4)`, sch.AdvisorID, p.DayOfWeek, p.StartTime, p.EndTime)
 		if err != nil {

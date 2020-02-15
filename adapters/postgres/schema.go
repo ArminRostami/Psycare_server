@@ -1,12 +1,12 @@
 package postgres
 
-type schema struct {
-	create string
-	drop   string
+type Schema struct {
+	Create string
+	Drop   string
 }
 
-var DefaultSchema = schema{
-	create: `
+var DefaultSchema = Schema{
+	Create: `
 
 	CREATE TABLE users (
 		id serial PRIMARY KEY,
@@ -65,7 +65,7 @@ var DefaultSchema = schema{
 
 	`,
 
-	drop: `
+	Drop: `
 	DROP TABLE ratings;
 	DROP TABLE schedules;
 	DROP TABLE appointments;
