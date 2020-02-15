@@ -10,7 +10,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o main .
+RUN go build cmd/psycare/main.go
 
 EXPOSE 9001
 
