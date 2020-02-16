@@ -1,6 +1,6 @@
-@root = http://127.0.0.1:9001
+@root = http://localhost:9001
 @remote = http://psycareams:9001
-@api = {{remote}}/api/v1
+@api = {{root}}/api/v1
 
 ### 1. Create user:
 POST {{api}}/users
