@@ -3,6 +3,9 @@ package http
 import (
 	"net/http"
 	"psycare/domain"
+	"strconv"
+
+	"github.com/go-chi/chi"
 )
 
 func (h *Handler) bookAppointment(w http.ResponseWriter, r *http.Request) {
@@ -99,4 +102,19 @@ func (h *Handler) cancelAppointment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderData(w, r, "appointment cancelled")
+}
+
+func (h *Handler) getAppointmentsWithID(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(chi.URLParam(r, "adv_id"), 10, 64)
+	if err != nil {
+		renderError(w, r, &httpError{"no advisor id in url", http.StatusBadRequest, err})
+		return
+	}
+
+	appts, err := h.GetAppointments(id, false)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to get appointments", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, appts)
 }
