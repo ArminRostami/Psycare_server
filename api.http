@@ -1,13 +1,13 @@
 @root = http://127.0.0.1:9001
 @remote = http://psycare:9001
-@api = {{remote}}/api/v1
+@api = {{root}}/api/v1
 
 ### 1. Create user:
 POST {{api}}/users
 
 {
-    "username":"user1",
-    "email":"abaasss@gmail.com",
+    "username":"user6",
+    "email":"absss@gmail.com",
     "password":"omegalul"
 }
 
@@ -21,7 +21,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 POST {{api}}/users/auth
 
 {
-    "username":"user1",
+    "username":"user6",
     "password":"omegalul"
 }
 
@@ -35,7 +35,8 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 {
     "first_name":"mamood",
     "last_name":"bozorge",
-    "description":"failing advisor"
+    "description":"failing advisor",
+    "hourly_fee":60
 }
 
 ### 5. Get a single advisor with id:

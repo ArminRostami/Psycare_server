@@ -14,8 +14,8 @@ type AdvisorStore struct {
 
 func (as *AdvisorStore) CreateAdvisor(advisor *domain.Advisor) error {
 	err := as.DB.NamedExecute(`
-	INSERT into advisors (id, first_name, last_name, description) 
-	VALUES (:id, :first_name, :last_name, :description)`, advisor)
+	INSERT into advisors (id, first_name, last_name, description, hourly_fee) 
+	VALUES (:id, :first_name, :last_name, :description, :hourly_fee)`, advisor)
 	return errors.Wrap(err, "failed to create advisor")
 }
 
