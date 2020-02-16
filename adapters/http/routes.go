@@ -20,6 +20,7 @@ func (h *Handler) SetupRoutes() {
 			r.Get("/advisors", h.getAdvisors)
 			r.Get("/advisors/{adv_id}", h.getAdvisor)
 			r.Get("/advisors/{adv_id}/rating", h.getAvgRating)
+			r.Get("/advisors/schedule/{adv_id}", h.getScheduleWithID)
 
 		})
 		r.Group(func(r chi.Router) {

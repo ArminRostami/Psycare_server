@@ -132,3 +132,19 @@ func (h *Handler) getSchedule(w http.ResponseWriter, r *http.Request) {
 
 	renderData(w, r, sch)
 }
+
+func (h *Handler) getScheduleWithID(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(chi.URLParam(r, "adv_id"), 10, 64)
+	if err != nil {
+		renderError(w, r, &httpError{"no advisor id in url", http.StatusBadRequest, err})
+		return
+	}
+
+	sch, err := h.GetSchedule(id)
+	if err != nil {
+		renderError(w, r, &httpError{"could not get schedule", http.StatusInternalServerError, err})
+		return
+	}
+
+	renderData(w, r, sch)
+}

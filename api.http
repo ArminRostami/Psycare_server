@@ -5,8 +5,8 @@
 POST {{api}}/users
 
 {
-    "username":"user4",
-    "email":"abaasddss@gmail.com",
+    "username":"user2",
+    "email":"abaasss@gmail.com",
     "password":"omegalul"
 }
 
@@ -20,7 +20,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 POST {{api}}/users/auth
 
 {
-    "username":"user2",
+    "username":"user1",
     "password":"omegalul"
 }
 
@@ -118,3 +118,8 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 ### 14. Get Schedule for an advisor
 GET {{api}}/advisors/schedule
 Cookie: {{auth.response.headers.Set-Cookie}}
+
+
+### 15. Get Schedule for advisor with id (public)
+@adv_id=1
+GET {{api}}/advisors/schedule/{{adv_id}}
