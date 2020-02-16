@@ -5,6 +5,7 @@ import (
 	"psycare/domain"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-chi/render"
 )
 
 func (h *Handler) createUser(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +57,7 @@ func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Set-Cookie", "HttpOnly;Secure;SameSite=Strict")
 	http.SetCookie(w, &http.Cookie{Name: "jwt", Value: tokenString})
 
-	renderData(w, r, user)
+	renderData(w, r, render.M{"user": user, "cookie": tokenString})
 }
 
 func (h *Handler) getUser(w http.ResponseWriter, r *http.Request) {
