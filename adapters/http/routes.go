@@ -2,15 +2,10 @@ package http
 
 import (
 	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/jwtauth"
-	"github.com/go-chi/render"
 )
 
 func (h *Handler) SetupRoutes() {
-	h.Router.Use(middleware.Logger)
-	h.Router.Use(middleware.Recoverer)
-	h.Router.Use(render.SetContentType(render.ContentTypeJSON))
 
 	h.Router.Route("/api/v1", func(r chi.Router) {
 		r.Group(func(r chi.Router) {

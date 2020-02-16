@@ -1,11 +1,12 @@
 @root = http://127.0.0.1:9001
-@api = {{root}}/api/v1
+@remote = http://psycare:9001
+@api = {{remote}}/api/v1
 
 ### 1. Create user:
 POST {{api}}/users
 
 {
-    "username":"user2",
+    "username":"user1",
     "email":"abaasss@gmail.com",
     "password":"omegalul"
 }
@@ -121,9 +122,9 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 
 
 ### 15. Get Schedule for advisor with id (public)
-@adv_id=1
+@adv_id=2
 GET {{api}}/advisors/schedule/{{adv_id}}
 
 ### 16. Get appointments for advisor with id (public)
-@adv_id=1
+@adv_id=2
 GET {{api}}/appointments/advisor/{{adv_id}}

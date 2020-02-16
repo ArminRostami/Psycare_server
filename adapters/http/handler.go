@@ -6,7 +6,10 @@ import (
 	app "psycare/application"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
+	"github.com/go-chi/render"
 	"github.com/go-playground/validator"
 	"github.com/pkg/errors"
 )
@@ -20,6 +23,19 @@ type Handler struct {
 
 func (h *Handler) Serve(port string) error {
 	h.Router = chi.NewRouter()
+	h.Router.Use(middleware.Logger)
+	h.Router.Use(middleware.Recoverer)
+	h.Router.Use(render.SetContentType(render.ContentTypeJSON))
+
+	cors := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	})
+	h.Router.Use(cors.Handler)
 
 	h.SetupRoutes()
 
