@@ -27,6 +27,7 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/advisors", h.createAdvisor)
 			r.Post("/advisors/schedule", h.addSchedule)
 			r.Get("/advisors/schedule", h.getSchedule)
+			r.Delete("/advisors/schedule", h.deleteSchedule)
 			r.Post("/appointments", h.bookAppointment)
 			r.Get("/appointments/user", h.getUserAppointments)
 			r.Get("/appointments/advisor", h.getAdvisorAppointments)
@@ -34,5 +35,4 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/appointments/cancel", h.cancelAppointment)
 		})
 	})
-
 }

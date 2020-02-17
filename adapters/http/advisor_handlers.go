@@ -148,3 +148,19 @@ func (h *Handler) getScheduleWithID(w http.ResponseWriter, r *http.Request) {
 
 	renderData(w, r, sch)
 }
+
+func (h *Handler) deleteSchedule(w http.ResponseWriter, r *http.Request) {
+	id, httpErr := getIDFromClaims(r)
+	if httpErr != nil {
+		renderError(w, r, httpErr)
+		return
+	}
+
+	err := h.DeleteScheduleWithID(id)
+	if err != nil {
+		renderError(w, r, &httpError{"failed to delete advisor schedule", http.StatusInternalServerError, err})
+		return
+	}
+	renderData(w, r, "schedule deleted successfully")
+
+}

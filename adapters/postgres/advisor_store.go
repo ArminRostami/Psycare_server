@@ -72,3 +72,10 @@ func (as *AdvisorStore) GetAvgRating(advisorID int64) (float64, error) {
 	`, advisorID)
 	return *avg, errors.Wrap(err, "failed to get average rating")
 }
+
+func (as *AdvisorStore) DeleteScheduleWithID(id int64) error {
+	err := as.DB.Execute(`
+	DELETE FROM schedules
+	WHERE advisor_id=$1`, id)
+	return errors.Wrap(err, "failed to delete schedule")
+}

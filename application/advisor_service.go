@@ -12,6 +12,7 @@ type AdvisorStore interface {
 	GetAdvisors(verified bool, limit, offset int) (*[]domain.Advisor, error)
 	AddSchedule(sch *domain.Schedule) error
 	GetSchedule(id int64) (*domain.Schedule, error)
+	DeleteScheduleWithID(id int64) error
 	GetAvgRating(advisorID int64) (float64, error)
 }
 
@@ -30,6 +31,10 @@ func (as *AdvisorService) CreateAdvisor(advisor *domain.Advisor) error {
 		return errors.Wrap(err, "advisor created")
 	}
 	return nil
+}
+
+func (as *AdvisorService) DeleteScheduleWithID(id int64) error {
+	return as.AdvisorStore.DeleteScheduleWithID(id)
 }
 
 func (as *AdvisorService) GetAdvisors(verified bool, limit, offset int) (*[]domain.Advisor, error) {

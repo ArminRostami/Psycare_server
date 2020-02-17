@@ -104,7 +104,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 }
 
 ### 12. Get avg rating for an advisor:
-@adv_id=11
+@adv_id=5
 GET {{api}}/advisors/{{adv_id}}/rating
 
 
@@ -129,3 +129,8 @@ GET {{api}}/advisors/schedule/{{adv_id}}
 ### 16. Get appointments for advisor with id (public)
 @adv_id=2
 GET {{api}}/appointments/advisor/{{adv_id}}
+
+
+### 17. Delete Schedule for advisor
+DELETE  {{api}}/advisors/schedule
+Cookie: {{auth.response.headers.Set-Cookie}}
