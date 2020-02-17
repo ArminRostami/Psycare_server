@@ -1,13 +1,13 @@
 @local = http://localhost:9001
 @remote = http://psycareams
-@api = {{remote}}/api/v1
+@api = {{local}}/api/v1
 
 ### 1. Create user:
 POST {{api}}/users
 
 {
-    "username":"user1",
-    "email":"absss@gmail.com",
+    "username":"user4",
+    "email":"abs@gmail.com",
     "password":"omegalul"
 }
 
@@ -21,7 +21,7 @@ Cookie: {{auth.response.headers.Set-Cookie}}
 POST {{api}}/users/auth
 
 {
-    "username":"user1",
+    "username":"user4",
     "password":"omegalul"
 }
 

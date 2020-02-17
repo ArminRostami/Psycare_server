@@ -54,7 +54,6 @@ func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, &httpError{"failed to generate token", http.StatusInternalServerError, err})
 		return
 	}
-	w.Header().Set("Set-Cookie", "HttpOnly;Secure;SameSite=Strict")
 	http.SetCookie(w, &http.Cookie{Name: "jwt", Value: tokenString})
 
 	renderData(w, r, render.M{"user": user, "cookie": tokenString})
