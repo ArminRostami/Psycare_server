@@ -168,6 +168,7 @@ func (as *AppointmentService) checkWithSchedule(appt *domain.Appointment) error 
 }
 
 func after(a, b time.Time) bool {
+	a, b = a.UTC(), b.UTC()
 	if a.Hour() != b.Hour() {
 		return a.Hour() > b.Hour()
 	}
